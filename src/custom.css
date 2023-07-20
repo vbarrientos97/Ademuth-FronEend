@@ -1,3 +1,5 @@
+/* Carousel */
+
 .drawing-area {
   position: absolute;
   top: 60px;
@@ -18,7 +20,7 @@
   width: 452px;
   height: 548px;
   position: relative;
-  background-color: #fff;
+  background-color: #ffffff;
 }
 
 #canvas {
@@ -29,4 +31,42 @@
   top: 0px;
   user-select: none;
   cursor: default;
+}
+
+/* Selector de colores */
+
+.color-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.color-option {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin: 5px;
+  cursor: pointer;
+  border: 2px solid #ccc;
+  display: inline-block;
+  position: relative;
+}
+
+.red {
+  background-color: red;
+}
+
+.blue {
+  background-color: blue;
+}
+
+.green {
+  background-color: green;
+}
+
+/* Ocultar el input radio */
+input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
 }

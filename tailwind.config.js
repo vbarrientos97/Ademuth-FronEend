@@ -11,6 +11,8 @@ module.exports = {
       summer: "#ffd500",
       myblacki: "#000105",
       babygray: "#565656",
+      graypage: "#f6f6f6",
+      grayline: "#e2e2e2",
     },
   },
   plugins: [],

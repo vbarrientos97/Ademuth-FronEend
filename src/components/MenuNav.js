@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export class MenuNav extends Component {
   render() {
     return (
-      <header className="flex justify-between items-center py-4 px-4 text-myblacki shadow-md fixed w-full inset-x-0">
+      <header className="bg-white flex justify-between items-center py-4 px-4 text-myblacki shadow-md fixed w-full inset-x-0">
         <div className="logo-ademuth">
           <span>logo</span>
         </div>
