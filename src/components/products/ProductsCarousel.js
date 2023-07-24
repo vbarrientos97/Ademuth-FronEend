@@ -29,12 +29,18 @@ const ProductsCarousel = ({ images }) => {
   };
 
   return (
-    <div>
-      <h2>Multi Image Carousel</h2>
-      <Slider {...settings}>
+    <div className="max-w-screen-lg mx-auto pt-16 pb-16">
+      <h2 className="mb-6 text-darkiblue font-bold text-center">
+        Agrega otros productos a tu compra
+      </h2>
+      <Slider {...settings} className="mb-8">
         {images.map((image, index) => (
-          <div key={index}>
-            <img src={image} alt={`Image ${index}`} />
+          <div key={index} className="px-4 w-[100%] h-[350px]">
+            <img
+              src={image}
+              alt={`Product ${index}`}
+              className="w-[100%] h-[100%] object-cover rounded-lg shadow-md"
+            />
           </div>
         ))}
       </Slider>

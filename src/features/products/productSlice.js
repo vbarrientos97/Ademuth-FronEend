@@ -82,7 +82,7 @@ export const productSlice = createSlice({
         state.products.push(action.payload);
       })
       .addCase(editProduct.fulfilled, (state, action) => {
-        const { id, name, description, price } = action.payload;
+        const { id, name, description, price, photoURL } = action.payload;
         const foundProduct = state.products.find(
           (product) => product.id === id
         );
@@ -90,6 +90,7 @@ export const productSlice = createSlice({
           foundProduct.name = name;
           foundProduct.description = description;
           foundProduct.price = price;
+          foundProduct.photoURL = photoURL;
         }
       })
       .addCase(deleteProduct.fulfilled, (state, action) => {

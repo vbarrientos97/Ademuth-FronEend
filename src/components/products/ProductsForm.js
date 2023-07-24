@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addProduct, editProduct } from "../features/products/productSlice";
+import { addProduct, editProduct } from "../../features/products/productSlice";
 import { useNavigate, useParams } from "react-router-dom";
 
 function ProductsForm() {
@@ -8,12 +8,13 @@ function ProductsForm() {
     name: "",
     description: "",
     price: "",
+    photoURL: "",
   });
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const params = useParams();
-  const products = useSelector((state) => state.products.products); // Accede al estado de los productos dentro del slice
+  const products = useSelector((state) => state.products.products);
 
   const handleChange = (e) => {
     setProduct({
@@ -42,7 +43,7 @@ function ProductsForm() {
       );
     }
     setTimeout(() => {
-      navigate("/");
+      navigate("/products");
     }, 500);
   };
 
@@ -59,7 +60,7 @@ function ProductsForm() {
         className="bg-darkiblue rounded-md max-w-sm p-6"
       >
         <label
-          className="block text-xs font-bold mb-2 text-white"
+          className="text-white block text-xs font-bold mb-2"
           htmlFor="name"
         >
           Producto:
@@ -70,10 +71,10 @@ function ProductsForm() {
           placeholder="Nombre del producto"
           value={product.name}
           onChange={handleChange}
-          className="w-full p-2 rounded-md bg-zinc-600 mb-2"
+          className="w-full p-2 rounded-md mb-2"
         />
         <label
-          className="block text-xs font-bold mb-2 text-white"
+          className="text-white block text-xs font-bold mb-2"
           htmlFor="price"
         >
           Precio:
@@ -82,12 +83,26 @@ function ProductsForm() {
           type="text"
           name="price"
           placeholder="Precio del producto"
-          value={"₡ " + product.price}
+          value={product.price}
           onChange={handleChange}
-          className="w-full p-2 rounded-md bg-zinc-600 mb-2"
+          className="w-full p-2 rounded-md mb-2"
         />
         <label
-          className="block text-xs font-bold mb-2 text-white"
+          className="text-white block text-xs font-bold mb-2"
+          htmlFor="photoURL"
+        >
+          Foto:
+        </label>
+        <input
+          type="text"
+          name="photoURL"
+          placeholder="Foto del producto"
+          value={product.photoURL}
+          onChange={handleChange}
+          className="w-full p-2 rounded-md mb-2"
+        />
+        <label
+          className="text-white block text-xs font-bold mb-2"
           htmlFor="description"
         >
           Descripción:
@@ -97,7 +112,7 @@ function ProductsForm() {
           placeholder="Descripción del producto"
           value={product.description}
           onChange={handleChange}
-          className="w-full p-2 rounded-md bg-zinc-600 mb-2 text-white"
+          className="w-full p-2 rounded-md mb-2"
         ></textarea>
         <button className="bg-mainblue text-white font-bold px-2 py-1 rounded-sm">
           Guardar Producto

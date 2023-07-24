@@ -1,7 +1,9 @@
 import "./App.css";
-import ProductsList from "./components/ProductsList";
-import ProductsForm from "./components/ProductsForm";
-import TeeDesigner from "./components/TeeDesigner";
+import ProductsList from "./components/products/ProductsList";
+import ProductsForm from "./components/products/ProductsForm";
+import TeeDesigner from "./components/designer/TeeDesigner";
+import TeeDesignerAdmin from "./components/designer/TeeDesignerAdmin";
+import Orders from "./components/purchase-orders/Orders";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -10,10 +12,12 @@ function App() {
       <div className="h-full relative">
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<ProductsList />} />
+            <Route path="/" element={<TeeDesigner />} />
+            <Route path="/tee-designer-admin" element={<TeeDesignerAdmin />} />
+            <Route path="/products" element={<ProductsList />} />
             <Route path="/create-product" element={<ProductsForm />} />
             <Route path="/edit-product/:id" element={<ProductsForm />} />
-            <Route path="/tee-designer" element={<TeeDesigner />} />
+            <Route path="/purchase-orders" element={<Orders />} />
           </Routes>
         </BrowserRouter>
       </div>
