@@ -1,8 +1,47 @@
-import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 import MenuNav from "../../components/nav/MenuNav";
 import { Link } from "react-router-dom";
+import {
+  deleteColor,
+  fetchColors,
+} from "../../features/colorSlice";
+import {
+  deleteDesign,
+  fetchDesigns,
+} from "../../features/localDesignSlice";
+import { useEffect } from "react";
 
 function TeeDesignerAdmin() {
+  const colors = useSelector((state) => state.colors.colors);
+  const status = useSelector((state) => state.colors.status);
+  const error = useSelector((state) => state.colors.error);
+
+  const designs = useSelector((state) => state.designs.designs);
+  const statusDesign = useSelector((state) => state.designs.status);
+  const errorDesign = useSelector((state) => state.designs.error);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchColors());
+    }
+  }, [status, dispatch]);
+
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchDesigns());
+    }
+  }, [status, dispatch]);
+
+  const handleDelete = (id) => {
+    dispatch(deleteColor(id));
+  };
+
+  const handleDeleteDesign = (id) => {
+    dispatch(deleteDesign(id));
+  };
+
   return (
     <div className="h-full bg-graypage">
       <MenuNav />
@@ -19,10 +58,10 @@ function TeeDesignerAdmin() {
                   Colores disponibles:
                 </h2>
                 <Link
-                  to={"/create-product"}
+                  to={"/create-color"}
                   className="w-40 flex gap-2 justify-center items-center bg-mainblue text-white font-bold px-2 py-1 text-xs rounded-md"
                 >
-                  + Agregar Producto
+                  + Agregar Color
                 </Link>
               </div>
               <div>
@@ -37,10 +76,13 @@ function TeeDesignerAdmin() {
                                 #
                               </th>
                               <th scope="col" className="px-6 py-4">
-                                Codigo de Color
+                                Nombre de Color
                               </th>
                               <th scope="col" className="px-6 py-4">
-                                Vista
+                                Código de Color
+                              </th>
+                              <th scope="col" className="px-6 py-4">
+                                Vista de Color
                               </th>
                               <th scope="col" className="px-6 py-4">
                                 Acción
@@ -48,87 +90,39 @@ function TeeDesignerAdmin() {
                             </tr>
                           </thead>
                           <tbody>
-                            <tr className="border-b bg-white border-grayline">
+                          {colors.map((color) => (
+                            <tr key={color.id} className="border-b bg-white border-grayline">
                               <td className="whitespace-nowrap px-6 py-4 font-medium">
-                                1
+                                {color.id}
                               </td>
                               <td className="whitespace-nowrap px-6 py-4">
-                                Mark
+                                {color.name}
                               </td>
                               <td className="whitespace-nowrap px-6 py-4">
-                                Otto
+                                {color.code}
+                              </td>
+                              <td className="whitespace-nowrap px-6 py-4">
+                                <div style={{ backgroundColor: color.code, padding: "4px", border: "solid 1px", borderRadius: "4px"}}>
+                                </div>
                               </td>
                               <td className="whitespace-nowrap px-6 py-4">
                                 <div className="mt-2 flex gap-x-2 justify-center">
                                   <Link
                                     className="bg-transparent text-babygray font-bold border-2 border-babygray px-2 py-1 text-xs rounded-md"
-                                    to={"/"}
+                                    to={`/edit-color/${color.id}`}
                                   >
                                     Editar
                                   </Link>
                                   <button
                                     className="bg-summer text-darkiblue font-bold px-2 py-1 text-xs rounded-md"
-                                    onClick={"/"}
+                                    onClick={() => handleDelete(color.id)}
                                   >
                                     Eliminar
                                   </button>
                                 </div>
                               </td>
                             </tr>
-                            <tr className="border-b text-darkiblue bg-white border-grayline">
-                              <td className="whitespace-nowrap px-6 py-4 font-medium">
-                                2
-                              </td>
-                              <td className="whitespace-nowrap px-6 py-4">
-                                Jacob
-                              </td>
-                              <td className="whitespace-nowrap px-6 py-4">
-                                Thornton
-                              </td>
-                              <td className="whitespace-nowrap px-6 py-4">
-                                <div className="mt-2 flex gap-x-2 justify-center">
-                                  <Link
-                                    className="bg-transparent text-babygray font-bold border-2 border-babygray px-2 py-1 text-xs rounded-md"
-                                    to={"/"}
-                                  >
-                                    Editar
-                                  </Link>
-                                  <button
-                                    className="bg-summer text-darkiblue font-bold px-2 py-1 text-xs rounded-md"
-                                    onClick={"/"}
-                                  >
-                                    Eliminar
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr className="border-b bg-white border-grayline">
-                              <td className="whitespace-nowrap px-6 py-4 font-medium">
-                                3
-                              </td>
-                              <td className="whitespace-nowrap px-6 py-4">
-                                Mark
-                              </td>
-                              <td className="whitespace-nowrap px-6 py-4">
-                                Otto
-                              </td>
-                              <td className="whitespace-nowrap px-6 py-4">
-                                <div className="mt-2 flex gap-x-2 justify-center">
-                                  <Link
-                                    className="bg-transparent text-babygray font-bold border-2 border-babygray px-2 py-1 text-xs rounded-md"
-                                    to={"/"}
-                                  >
-                                    Editar
-                                  </Link>
-                                  <button
-                                    className="bg-summer text-darkiblue font-bold px-2 py-1 text-xs rounded-md"
-                                    onClick={"/"}
-                                  >
-                                    Eliminar
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
+                          ))}
                           </tbody>
                         </table>
                       </div>
@@ -138,16 +132,16 @@ function TeeDesignerAdmin() {
               </div>
             </div>
 
-            <div className="p-8 mb-6">
+            <div className="pt-8 mb-6">
               <div className="flex justify-between mb-2">
                 <h2 className="text-darkiblue font-bold mb-2 text-center">
-                  Diseños propios disponibles:
+                  Diseños disponibles:
                 </h2>
                 <Link
-                  to={"/create-product"}
+                  to={"/create-design"}
                   className="w-40 flex gap-2 justify-center items-center bg-mainblue text-white font-bold px-2 py-1 text-xs rounded-md"
                 >
-                  + Agregar Producto
+                  + Agregar Diseño
                 </Link>
               </div>
               <div>
@@ -162,10 +156,10 @@ function TeeDesignerAdmin() {
                                 #
                               </th>
                               <th scope="col" className="px-6 py-4">
-                                Codigo de Color
+                                Nombre del Diseño
                               </th>
                               <th scope="col" className="px-6 py-4">
-                                Vista
+                                Imagen
                               </th>
                               <th scope="col" className="px-6 py-4">
                                 Acción
@@ -173,87 +167,41 @@ function TeeDesignerAdmin() {
                             </tr>
                           </thead>
                           <tbody>
-                            <tr className="border-b bg-white border-grayline">
+                          {designs.map((design, index) => (
+                            <tr key={index} className="border-b bg-white border-grayline">
                               <td className="whitespace-nowrap px-6 py-4 font-medium">
-                                1
+                                {design.id}
                               </td>
                               <td className="whitespace-nowrap px-6 py-4">
-                                Mark
+                                {design.name}
                               </td>
                               <td className="whitespace-nowrap px-6 py-4">
-                                Otto
+                              <div key={index} className="px-4 w-[150px] h-auto">
+                                <img
+                                  src={design.image}
+                                  alt={`Diseño ${index}`}
+                                  className="w-[100%] h-[100%] object-cover rounded-lg shadow-md"
+                                />
+                              </div>
                               </td>
                               <td className="whitespace-nowrap px-6 py-4">
                                 <div className="mt-2 flex gap-x-2 justify-center">
                                   <Link
                                     className="bg-transparent text-babygray font-bold border-2 border-babygray px-2 py-1 text-xs rounded-md"
-                                    to={"/"}
+                                    to={`/edit-design/${design.id}`}
                                   >
                                     Editar
                                   </Link>
                                   <button
                                     className="bg-summer text-darkiblue font-bold px-2 py-1 text-xs rounded-md"
-                                    onClick={"/"}
+                                    onClick={() => handleDeleteDesign(design.id)}
                                   >
                                     Eliminar
                                   </button>
                                 </div>
                               </td>
                             </tr>
-                            <tr className="border-b text-darkiblue bg-white border-grayline">
-                              <td className="whitespace-nowrap px-6 py-4 font-medium">
-                                2
-                              </td>
-                              <td className="whitespace-nowrap px-6 py-4">
-                                Jacob
-                              </td>
-                              <td className="whitespace-nowrap px-6 py-4">
-                                Thornton
-                              </td>
-                              <td className="whitespace-nowrap px-6 py-4">
-                                <div className="mt-2 flex gap-x-2 justify-center">
-                                  <Link
-                                    className="bg-transparent text-babygray font-bold border-2 border-babygray px-2 py-1 text-xs rounded-md"
-                                    to={"/"}
-                                  >
-                                    Editar
-                                  </Link>
-                                  <button
-                                    className="bg-summer text-darkiblue font-bold px-2 py-1 text-xs rounded-md"
-                                    onClick={"/"}
-                                  >
-                                    Eliminar
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr className="border-b bg-white border-grayline">
-                              <td className="whitespace-nowrap px-6 py-4 font-medium">
-                                3
-                              </td>
-                              <td className="whitespace-nowrap px-6 py-4">
-                                Mark
-                              </td>
-                              <td className="whitespace-nowrap px-6 py-4">
-                                Otto
-                              </td>
-                              <td className="whitespace-nowrap px-6 py-4">
-                                <div className="mt-2 flex gap-x-2 justify-center">
-                                  <Link
-                                    className="bg-transparent text-babygray font-bold border-2 border-babygray px-2 py-1 text-xs rounded-md"
-                                    to={"/"}
-                                  >
-                                    Editar
-                                  </Link>
-                                  <button
-                                    className="bg-summer text-darkiblue font-bold px-2 py-1 text-xs rounded-md"
-                                    onClick={"/"}
-                                  >
-                                    Eliminar
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
+                          ))}
                           </tbody>
                         </table>
                       </div>
@@ -262,6 +210,7 @@ function TeeDesignerAdmin() {
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </div>

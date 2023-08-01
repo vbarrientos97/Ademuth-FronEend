@@ -1,9 +1,11 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-const ProductsCarousel = ({ images }) => {
+const ProductsCarousel = () => {
+  const products = useSelector((state) => state.products.products);
   const settings = {
     dots: true,
     infinite: true,
@@ -34,10 +36,10 @@ const ProductsCarousel = ({ images }) => {
         Agrega otros productos a tu compra
       </h2>
       <Slider {...settings} className="mb-8">
-        {images.map((image, index) => (
+        {products.map((product, index) => (
           <div key={index} className="px-4 w-[100%] h-[350px]">
             <img
-              src={image}
+              src={product.photoURL}
               alt={`Product ${index}`}
               className="w-[100%] h-[100%] object-cover rounded-lg shadow-md"
             />

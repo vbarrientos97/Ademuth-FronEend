@@ -6,15 +6,9 @@ import background_tshirt from "../../images/background_tshirt.png";
 import batman from "../../images/batman.png";
 import "../../custom.css";
 import ProductsCarousel from "../products/ProductsCarousel";
-import im1 from "../../carousel-images/im1.jpg";
-import im2 from "../../carousel-images/im2.jpg";
-import im3 from "../../carousel-images/im3.jpg";
-import im4 from "../../carousel-images/im4.jpg";
-import im5 from "../../carousel-images/im5.jpg";
 import tallas from "../../images/tallas.jpg";
 
 function TeeDesigner() {
-  const images = [im1, im2, im3, im4, im5];
   const [selectedDesign, setSelectedDesign] = useState("");
   const [tshirtColor, setTshirtColor] = useState("");
   const [tshirtSize, setTshirtSize] = useState("");
@@ -22,8 +16,6 @@ function TeeDesigner() {
   const [tshirtCustomerName, setTshirtCustomerName] = useState("");
   const [tshirtCustomerLastname, setTshirtCustomerLastname] = useState("");
   const [tshirtComments, setTshirtComments] = useState("");
-
-  const [selectedColor, setSelectedColor] = useState("");
   const [customDesignFile, setCustomDesignFile] = useState(null);
   const canvasRef = useRef(null);
 
@@ -63,7 +55,6 @@ function TeeDesigner() {
   const handleColorRadioChange = (event) => {
     const color = event.target.value;
     document.getElementById("tshirt-div").style.backgroundColor = color;
-    setSelectedColor(color);
     setTshirtColor(color);
   };
 
@@ -432,7 +423,7 @@ function TeeDesigner() {
         </div>
       </div>
       <div>
-        <ProductsCarousel images={images} />
+        <ProductsCarousel />
       </div>
       <Footer />
     </>

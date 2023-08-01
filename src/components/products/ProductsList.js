@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   deleteProduct,
   fetchProducts,
-} from "../../features/products/productSlice";
+} from "../../features/productSlice";
 import { useEffect } from "react";
 import MenuNav from "../nav/MenuNav";
 import { Link } from "react-router-dom";
@@ -76,7 +76,11 @@ function ProductsList() {
                 <p className="text-babygray mt-2 mb-2">
                   Precio: ₡{product.price}
                 </p>
-                <div>{product.photoURL}</div>
+                <img
+                  src={product.photoURL}
+                  alt={product.name}
+                  className="w-40 h-40 mx-auto mt-2 rounded-md object-cover"
+                />
                 <div className="mt-2 flex gap-x-2 justify-center">
                   <Link
                     className="bg-transparent text-babygray font-bold border-2 border-babygray px-2 py-1 text-xs rounded-md"

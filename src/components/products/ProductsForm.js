@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addProduct, editProduct } from "../../features/products/productSlice";
+import { addProduct, editProduct } from "../../features/productSlice";
 import { useNavigate, useParams } from "react-router-dom";
 
 function ProductsForm() {
@@ -8,7 +8,7 @@ function ProductsForm() {
     name: "",
     description: "",
     price: "",
-    photoURL: "",
+    photoURL: null,
   });
 
   const dispatch = useDispatch();
@@ -23,6 +23,20 @@ function ProductsForm() {
     });
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProduct({
+          ...product,
+          photoURL: reader.result,
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const getNextProductId = () => {
     const productIds = products.map((product) => product.id);
     const maxId = Math.max(...productIds);
@@ -31,9 +45,10 @@ function ProductsForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (params.id) {
-      dispatch(editProduct(product));
+      await dispatch(
+        editProduct({ id: Number(params.id), productData: product })
+      );
     } else {
       await dispatch(
         addProduct({
@@ -94,11 +109,10 @@ function ProductsForm() {
           Foto:
         </label>
         <input
-          type="text"
+          type="file"
+          accept="image/*"
           name="photoURL"
-          placeholder="Foto del producto"
-          value={product.photoURL}
-          onChange={handleChange}
+          onChange={(e) => handleImageChange(e)}
           className="w-full p-2 rounded-md mb-2"
         />
         <label
