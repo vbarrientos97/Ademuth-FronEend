@@ -34,6 +34,12 @@ export class MenuNav extends Component {
           >
             Administrar Otros Productos
           </Link>
+          <Link
+            to="/customer-order"
+            className="px-4 py-4 rounded-sm text-sm hover:border-b-4 hover:border-summer"
+          >
+            Orden de Compra
+          </Link>
         </div>
       </header>
     );
