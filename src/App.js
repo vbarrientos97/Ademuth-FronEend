@@ -1,7 +1,6 @@
 import "./App.css";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
-import ProtectedPage from "./components/auth/ProtectedPage";
 import ProductsList from "./components/products/ProductsList";
 import ProductsForm from "./components/products/ProductsForm";
 import TeeDesigner from "./components/designer/TeeDesigner";
@@ -18,10 +17,9 @@ function App() {
       <div className="h-full relative">
         <BrowserRouter>
           <Routes>
+            <Route exact path="/" element={<Login />} />
             <Route exact path="/register" element={<Register />} />
-            <Route exact path="/login" element={<Login />} />
-            <Route exact path="/protected" element={<ProtectedPage />} />
-            <Route path="/" element={<TeeDesigner />} />
+            <Route path="/dashboard" element={<TeeDesigner />} />
             <Route path="/tee-designer-admin" element={<TeeDesignerAdmin />} />
             <Route path="/products" element={<ProductsList />} />
             <Route path="/create-product" element={<ProductsForm />} />

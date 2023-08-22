@@ -6,7 +6,7 @@ import { deleteColor, fetchColors } from "../../features/colorSlice";
 const ITEMS_PER_PAGE = 4;
 
 function ColorsTable() {
-  const colors = useSelector((state) => state.colors.colors);
+  const colorsData = useSelector((state) => state.colors.colors);
   const status = useSelector((state) => state.colors.status);
   const [currentPage, setCurrentPage] = useState(0);
   const dispatch = useDispatch();
@@ -17,20 +17,28 @@ function ColorsTable() {
     }
   }, [status, dispatch]);
 
+  useEffect(() => {
+    if (status === "succeeded") {
+      setCurrentPage(0);
+    }
+  }, [status]);
+
   const handleDelete = (id) => {
-    dispatch(deleteColor(id));
+    if (window.confirm("¿Estás seguro de que deseas eliminar este color?")) {
+      dispatch(deleteColor(id));
+    }
   };
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
-  const paginatedColors = colors.slice(
+  const paginatedColors = colorsData.slice(
     currentPage * ITEMS_PER_PAGE,
     (currentPage + 1) * ITEMS_PER_PAGE
   );
 
-  const totalPages = Math.ceil(colors.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(colorsData.length / ITEMS_PER_PAGE);
 
   return (
     <div className="pt-8 mb-6">
@@ -71,9 +79,9 @@ function ColorsTable() {
                     </tr>
                   </thead>
                   <tbody>
-                    {paginatedColors.map((color) => (
+                    {paginatedColors.map((color, index) => (
                       <tr
-                        key={color.id}
+                        key={index}
                         className="border-b bg-white border-grayline"
                       >
                         <td className="whitespace-nowrap px-6 py-4 font-medium">

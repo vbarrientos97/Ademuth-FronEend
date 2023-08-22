@@ -71,7 +71,7 @@ const productSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(addProduct.fulfilled, (state, action) => {
-        state.products.push(action.payload);
+        state.products.push(action.payload.data);
       })
       .addCase(editProduct.fulfilled, (state, action) => {
         const editedProduct = action.payload;

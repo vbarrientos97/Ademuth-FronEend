@@ -71,7 +71,7 @@ const designSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(addDesign.fulfilled, (state, action) => {
-        state.designs.push(action.payload);
+        state.designs.push(action.payload.data);
       })
       .addCase(editDesign.fulfilled, (state, action) => {
         const editedDesign = action.payload;

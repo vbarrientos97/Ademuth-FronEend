@@ -70,7 +70,7 @@ const orderSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(addOrder.fulfilled, (state, action) => {
-        state.orders.push(action.payload);
+        state.orders.push(action.payload.data);
       })
       .addCase(editOrder.fulfilled, (state, action) => {
         const editedOrder = action.payload;

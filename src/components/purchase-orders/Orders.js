@@ -41,6 +41,9 @@ const Orders = () => {
         <div className="max-w-[70%] mx-auto pt-40 pb-16">
           <div>
             <div className="flex flex-col">
+              <h1 className="mb-6 text-darkiblue font-bold">
+                Órdenes de Compra
+              </h1>
               <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
                   <div className="overflow-hidden">
@@ -124,12 +127,6 @@ const Orders = () => {
                             </td>
                             <td className="whitespace-nowrap px-6 py-4">
                               <div className="mt-2 flex gap-x-2 justify-center">
-                                <Link
-                                  className="bg-transparent text-babygray font-bold border-2 border-babygray px-2 py-1 text-xs rounded-md"
-                                  to={"/"}
-                                >
-                                  Editar
-                                </Link>
                                 <button
                                   className="bg-summer text-darkiblue font-bold px-2 py-1 text-xs rounded-md"
                                   onClick={() => handleDelete(order.id)}

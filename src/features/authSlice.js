@@ -17,8 +17,14 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const logoutUser = createAsyncThunk("auth/logout", async (userData) => {
+  const response = await api.post("/persons/logout", userData);
+  return response.data;
+});
+
 const initialState = {
   user: null,
+  isAdmin: false,
   status: "idle",
   error: null,
 };
@@ -52,8 +58,22 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.user = action.payload.user;
+        state.isAdmin = action.payload.isAdmin;
       })
       .addCase(loginUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(logoutUser.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.status = "idle";
+        state.user = null;
+        state.isAdmin = false;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

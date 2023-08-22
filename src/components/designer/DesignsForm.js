@@ -10,10 +10,13 @@ function DesignsForm() {
     name: "",
     image: null,
   });
+
   const params = useParams();
   const designs = useSelector((state) => state.designs.designs);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [requestStatus, setRequestStatus] = useState(null);
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -46,12 +49,20 @@ function DesignsForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors({});
+
+    if (!design.name || !design.image) {
+      setErrors({
+        name: !design.name ? "Campo obligatorio" : "",
+        image: !design.image ? "Campo obligatorio" : "",
+      });
+      return;
+    }
     setIsModalOpen(true);
   };
 
   const handleConfirm = async () => {
-    setIsModalOpen(false);
-    setRequestStatus("guardando");
+    setIsLoading(true);
 
     try {
       if (params.id) {
@@ -66,14 +77,14 @@ function DesignsForm() {
           })
         );
       }
-      setRequestStatus("éxito");
+      setRequestStatus("succeeded");
     } catch (error) {
-      setRequestStatus("error");
+      setRequestStatus("failed");
     }
   };
 
   useEffect(() => {
-    if (requestStatus === "éxito") {
+    if (requestStatus === "succeeded") {
       setTimeout(() => {
         navigate("/tee-designer-admin");
       }, 500);
@@ -81,50 +92,86 @@ function DesignsForm() {
   }, [requestStatus, navigate]);
 
   return (
-    <div className="flex items-center justify-center h-full">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-darkiblue rounded-md max-w-m p-6"
-      >
-        <label
-          className="text-white block text-xs font-bold mb-2"
-          htmlFor="name"
-        >
-          Nombre del diseño:
-        </label>
-        <input
-          type="text"
-          name="name"
-          placeholder="Nombre del diseño"
-          value={design.name}
-          onChange={handleChange}
-          className="w-full p-2 rounded-md mb-2"
-        />
-        <label
-          className="text-white block text-xs font-bold mb-2"
-          htmlFor="image"
-        >
-          Vista del Diseño:
-        </label>
-        <input
-          type="file"
-          accept="image/*"
-          name="image"
-          onChange={(e) => handleImageChange(e)}
-          className="w-full p-2 rounded-md mb-2 text-white"
-        />
-        <div className="mt-2 flex gap-x-2">
-          <button className="bg-mainblue text-white font-bold px-2 py-1 rounded-sm">
-            Guardar Diseño
-          </button>
-          <Link
-            to={"/tee-designer-admin"}
-            className="bg-summer text-darkiblue font-bold px-2 py-1 rounded-sm"
-          >
-            Cancelar
-          </Link>
+    <>
+      <div>
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+          <div className="flex flex-col bg-white shadow-md px-4 sm:px-6 md:px-8 lg:px-10 py-8 rounded-md w-full max-w-md">
+            <h1 className="text-center text-3xl font-light text-darkiblue">
+              {params.id ? "Editar Diseño" : "Agregar Diseño"}
+            </h1>
+            <div className="mt-8">
+              <form onSubmit={handleSubmit}>
+                <div className="flex flex-col mb-6">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="Nombre del diseño"
+                      value={design.name}
+                      onChange={handleChange}
+                      className={`text-sm sm:text-base placeholder-gray-500 pl-2 pr-4 rounded-lg border ${
+                        errors.name ? "border-red-500" : "border-gray-400"
+                      } w-full py-2 focus:outline-none focus:border-blue-400`}
+                    />
+                  </div>
+                  {errors.name && <p className="text-red-500">{errors.name}</p>}
+                </div>
+
+                <div className="flex flex-col mb-6">
+                  <div className="relative">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      id="image"
+                      className="opacity-0 absolute inset-0 w-full h-full cursor-pointer"
+                      onChange={(e) => handleImageChange(e)}
+                    />
+                    <div
+                      role="button"
+                      tabIndex="0"
+                      className="cursor-pointer w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring focus:border-blue-300 bg-white hover:bg-gray-100 text-gray-800"
+                    >
+                      <span className="inline-block mr-2">
+                        <svg
+                          className="w-5 h-5 text-gray-600 pt-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M12 4v16m8-8H4"
+                          />
+                        </svg>
+                      </span>
+                      Escoger imagen
+                    </div>
+                    <span className="pl-1 text-xs text-gray-600">
+                      {design.image
+                        ? "Imagen: " + design.name + " seleccionada."
+                        : "No se ha seleccionado una imagen"}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="mt-2 flex gap-x-2">
+                  <button className="bg-mainblue text-white font-bold px-2 py-1 rounded-sm">
+                    Guardar Diseño
+                  </button>
+                  <Link
+                    to={"/tee-designer-admin"}
+                    className="bg-summer text-darkiblue font-bold px-2 py-1 rounded-sm"
+                  >
+                    Cancelar
+                  </Link>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
-      </form>
+      </div>
 
       <Modal
         isOpen={isModalOpen}
@@ -152,7 +199,7 @@ function DesignsForm() {
           </button>
         </div>
       </Modal>
-    </div>
+    </>
   );
 }
 

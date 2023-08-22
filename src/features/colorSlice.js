@@ -37,17 +37,14 @@ export const deleteColor = createAsyncThunk(
   }
 );
 
-export const fetchColors = createAsyncThunk(
-  "colors/fetchColors",
-  async () => {
-    try {
-      const response = await api.get("/colors");
-      return response.data;
-    } catch (error) {
-      throw Error("Error al cargar los colores.");
-    }
+export const fetchColors = createAsyncThunk("colors/fetchColors", async () => {
+  try {
+    const response = await api.get("/colors");
+    return response.data;
+  } catch (error) {
+    throw Error("Error al cargar los colores.");
   }
-);
+});
 
 const colorSlice = createSlice({
   name: "colors",
@@ -71,9 +68,11 @@ const colorSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(addColor.fulfilled, (state, action) => {
-        state.colors.push(action.payload);
+        state.status = "succeeded";
+        state.colors.push(action.payload.data);
       })
       .addCase(editColor.fulfilled, (state, action) => {
+        state.status = "succeeded";
         const editedColor = action.payload;
         const existingColor = state.colors.find(
           (color) => color.id === editedColor.id

@@ -12,9 +12,11 @@ function ColorsForm() {
   });
 
   const params = useParams();
-  const colors = useSelector((state) => state.colors.colors);
+  const colorsData = useSelector((state) => state.colors.colors);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [requestStatus, setRequestStatus] = useState(null);
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -26,19 +28,28 @@ function ColorsForm() {
   };
 
   const getNextColorId = () => {
-    const productIds = colors.map((color) => color.id);
+    const productIds = colorsData.map((color) => color.id);
     const maxId = Math.max(...productIds);
     return maxId + 1;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors({});
+
+    if (!color.name || !color.code) {
+      setErrors({
+        name: !color.name ? "Campo obligatorio" : "",
+        code: !color.code ? "Campo obligatorio" : "",
+      });
+      return;
+    }
+
     setIsModalOpen(true);
   };
 
   const handleConfirm = async () => {
-    setIsModalOpen(false);
-    setRequestStatus("guardando");
+    setIsLoading(true);
 
     try {
       if (params.id) {
@@ -51,66 +62,80 @@ function ColorsForm() {
           })
         );
       }
-      setRequestStatus("éxito");
+      setRequestStatus("succeeded");
     } catch (error) {
-      setRequestStatus("error");
+      setRequestStatus("failed");
     }
   };
 
   useEffect(() => {
-    if (requestStatus === "éxito") {
-      setTimeout(() => {
+    const redirectToAdmin = async () => {
+      if (requestStatus === "succeeded") {
+        await new Promise((resolve) => setTimeout(resolve, 500));
         navigate("/tee-designer-admin");
-      }, 500);
-    }
+      }
+    };
+
+    redirectToAdmin();
   }, [requestStatus, navigate]);
 
   return (
-    <div className="flex items-center justify-center h-full">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-darkiblue rounded-md max-w-m p-6"
-      >
-        <label
-          className="text-white block text-xs font-bold mb-2"
-          htmlFor="name"
-        >
-          Color:
-        </label>
-        <input
-          type="text"
-          name="name"
-          placeholder="Nombre del color"
-          value={color.name}
-          onChange={handleChange}
-          className="w-full p-2 rounded-md mb-2"
-        />
-        <label
-          className="text-white block text-xs font-bold mb-2"
-          htmlFor="code"
-        >
-          Codigo del color:
-        </label>
-        <input
-          type="text"
-          name="code"
-          placeholder="Código del color"
-          value={color.code}
-          onChange={handleChange}
-          className="w-full p-2 rounded-md mb-2"
-        />
-        <div className="mt-2 flex gap-x-2">
-          <button className="bg-mainblue text-white font-bold px-2 py-1 rounded-sm">
-            Guardar Color
-          </button>
-          <Link
-            to={"/tee-designer-admin"}
-            className="bg-summer text-darkiblue font-bold px-2 py-1 rounded-sm"
-          >
-            Cancelar
-          </Link>
+    <>
+      <div>
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+          <div className="flex flex-col bg-white shadow-md px-4 sm:px-6 md:px-8 lg:px-10 py-8 rounded-md w-full max-w-md">
+            <h1 className="text-center text-3xl font-light text-darkiblue">
+              {params.id ? "Editar Color" : "Agregar Color"}
+            </h1>
+            <div className="mt-8">
+              <form onSubmit={handleSubmit}>
+                <div className="flex flex-col mb-6">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="Nombre del color"
+                      value={color.name}
+                      onChange={handleChange}
+                      className={`text-sm sm:text-base placeholder-gray-500 pl-2 pr-4 rounded-lg border ${
+                        errors.name ? "border-red-500" : "border-gray-400"
+                      } w-full py-2 focus:outline-none focus:border-blue-400`}
+                    />
+                  </div>
+                  {errors.name && <p className="text-red-500">{errors.name}</p>}
+                </div>
+
+                <div className="flex flex-col mb-6">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      name="code"
+                      placeholder="Código del color"
+                      value={color.code}
+                      onChange={handleChange}
+                      className={`text-sm sm:text-base placeholder-gray-500 pl-2 pr-4 rounded-lg border ${
+                        errors.code ? "border-red-500" : "border-gray-400"
+                      } w-full py-2 focus:outline-none focus:border-blue-400`}
+                    />
+                  </div>
+                  {errors.code && <p className="text-red-500">{errors.code}</p>}
+                </div>
+                <div className="mt-2 flex gap-x-2">
+                  <button className="bg-mainblue text-white font-bold px-2 py-1 rounded-sm">
+                    Guardar Color
+                  </button>
+                  <Link
+                    to={"/tee-designer-admin"}
+                    className="bg-summer text-darkiblue font-bold px-2 py-1 rounded-sm"
+                  >
+                    Cancelar
+                  </Link>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
-      </form>
+      </div>
 
       <Modal
         isOpen={isModalOpen}
@@ -118,6 +143,7 @@ function ColorsForm() {
         contentLabel="Confirmation Modal"
         className="fixed inset-0 flex items-center justify-center"
         overlayClassName="fixed inset-0"
+        isLoading={isLoading}
       >
         <div className="bg-black opacity-90 absolute inset-0"></div>
         <div className="bg-white p-6 rounded-md shadow-md text-center relative">
@@ -126,9 +152,12 @@ function ColorsForm() {
           </p>
           <button
             className="bg-mainblue text-white px-3 py-1 rounded-md mt-3 mr-2"
+            disabled={isLoading}
             onClick={handleConfirm}
           >
-            Sí, guardar
+            <span className="mr-2">
+              {isLoading ? "Guardando" : "Sí, guardar"}
+            </span>
           </button>
           <button
             className="bg-summer text-darkiblue px-3 py-1 rounded-md mt-3"
@@ -138,7 +167,7 @@ function ColorsForm() {
           </button>
         </div>
       </Modal>
-    </div>
+    </>
   );
 }
 
