@@ -71,9 +71,11 @@ const productSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(addProduct.fulfilled, (state, action) => {
+        state.status = "succeeded";
         state.products.push(action.payload.data);
       })
       .addCase(editProduct.fulfilled, (state, action) => {
+        state.status = "succeeded";
         const editedProduct = action.payload;
         const existingProduct = state.products.find(
           (product) => product.id === editedProduct.id

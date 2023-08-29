@@ -1,6 +1,8 @@
+import React, { useState } from "react";
 import MenuNav from "../../components/nav/MenuNav";
 import ColorsTable from "./ColorsTable";
 import DesignsTable from "./DesignsTable";
+import TshirtPrice from "./TshirtPrice";
 
 function TeeDesignerAdmin() {
   return (
@@ -11,6 +13,7 @@ function TeeDesignerAdmin() {
           <h1 className="mb-6 text-darkiblue font-bold">
             Administrar Camisetas
           </h1>
+          <TshirtPrice />
           <div className="flex justify-between gap-8">
             <ColorsTable />
             <DesignsTable />

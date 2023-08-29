@@ -16,7 +16,6 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState("");
-  const [isAdmin, setIsAdmin] = useState("");
   const [isRegisteringIn, setIsRegisteringIn] = useState(false);
 
   const navigate = useNavigate();
@@ -40,7 +39,7 @@ const Register = () => {
     setIsRegisteringIn(true);
 
     try {
-      await dispatch(
+      const response = await dispatch(
         registerUser({
           name,
           lastname,
@@ -50,9 +49,9 @@ const Register = () => {
           password,
           isAdmin: false,
         })
-      );
+      ).unwrap();
 
-      if (registerStatus === "succeeded") {
+      if (response.meta.requestStatus === "fulfilled") {
         navigate("/");
       }
     } catch (error) {
@@ -61,6 +60,12 @@ const Register = () => {
       setIsRegisteringIn(false);
     }
   };
+
+  useEffect(() => {
+    if (registerStatus === "succeeded") {
+      navigate("/");
+    }
+  }, [registerStatus, navigate]);
 
   return (
     <div>
@@ -180,7 +185,7 @@ const Register = () => {
                 </button>
               </div>
               <div className="text-babygray mt-2">
-                <Link to="/" className="">
+                <Link to="/">
                   Ya tienes una cuenta?{" "}
                   <span className="text-mainblue underline">
                     Click aquí para ingresar

@@ -3,8 +3,9 @@ import { useState, useEffect, useRef } from "react";
 import { fabric } from "fabric";
 import { fetchColors } from "../../features/colorSlice";
 import { fetchDesigns } from "../../features/localDesignSlice";
-import { addOrder } from "../../features/orderSlice";
+import { addTshirt } from "../../features/tshirtSlice";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 import tallas from "../../images/tallas.jpg";
 
 function TeeDesignerForm() {
@@ -12,16 +13,17 @@ function TeeDesignerForm() {
   const [tshirtColor, setTshirtColor] = useState("");
   const [tshirtSize, setTshirtSize] = useState("");
   const [tshirtAmount, setTshirtAmount] = useState("");
-  const [tshirtCustomerName, setTshirtCustomerName] = useState("");
-  const [tshirtCustomerLastname, setTshirtCustomerLastname] = useState("");
   const [tshirtComments, setTshirtComments] = useState("");
   const [customDesignFile, setCustomDesignFile] = useState(null);
+
+  const tshirtPrice = useSelector((state) => state.price.tshirtPrice);
 
   const colors = useSelector((state) => state.colors.colors);
   const status = useSelector((state) => state.colors.status);
 
   const designs = useSelector((state) => state.designs.designs);
   const statusDesign = useSelector((state) => state.designs.status);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const canvasRef = useRef(null);
@@ -95,17 +97,6 @@ function TeeDesignerForm() {
     setTshirtAmount(amount);
   };
 
-  // Handler for selecting a customer name and lastname
-  const handleCustomerName = (event) => {
-    const customerName = event.target.value;
-    setTshirtCustomerName(customerName);
-  };
-
-  const handleCustomerLastname = (event) => {
-    const customerLastname = event.target.value;
-    setTshirtCustomerLastname(customerLastname);
-  };
-
   // Handler for selecting the aditional comments
   const handleComments = (event) => {
     const comments = event.target.value;
@@ -170,35 +161,32 @@ function TeeDesignerForm() {
   };
 
   // Handler to set an id
-  const getNextOrderId = () => {
-    const orderIds = designs.map((order) => order.id);
-    const maxId = Math.max(...orderIds);
-    return maxId + 1;
+  const generateUniqueTshirtId = () => {
+    return uuidv4();
   };
 
   // Handler to submit data to the server
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newOrder = {
+    const newTshirt = {
       localDesign: selectedDesign,
       color: tshirtColor,
       size: tshirtSize,
       customDesign: customDesignFile ? customDesignFile.name : null,
       amount: tshirtAmount,
-      customerName: tshirtCustomerName,
-      customerLastname: tshirtCustomerLastname,
       comments: tshirtComments,
-      id: getNextOrderId(),
+      price: tshirtPrice,
+      id: generateUniqueTshirtId(),
     };
 
-    await dispatch(addOrder(newOrder)).then(() => {
-      navigate("/");
+    await dispatch(addTshirt(newTshirt)).then(() => {
+      navigate("/customer-order");
     });
   };
 
   return (
-    <div className="p-12 rounded-md border-2 border-grayline">
-      <form onSubmit={handleSubmit} className="flex gap-x-12">
+    <div className="p-x-6">
+      <form onSubmit={handleSubmit} className="flex gap-x-12 mt-8">
         <div className="flex flex-col gap-y-6">
           <h2 className="mb-2 font-bold text-mainblue">
             Escoge aquí cómo quieres que se vea tu camiseta:
@@ -283,35 +271,34 @@ function TeeDesignerForm() {
             <label className="text-sm font-medium text-babygray">
               Colores disponibles:
             </label>
-            <div className="flex gap-x-4">
+            <div className="flex gap-4 flex-wrap">
               {colors.map((color, index) => (
                 <label
                   key={index}
-                  className="text-babygray"
+                  className="text-babygray text-center"
                   htmlFor={color.name}
                 >
                   <div
                     className="circle-color"
+                    title={color.name}
                     style={{ backgroundColor: color.code }}
                     onClick={() =>
                       handleColorRadioChange({ target: { value: color.code } })
                     }
                   />
-                  {color.name}
                 </label>
               ))}
             </div>
           </div>
-          {/* Sizes */}
           <div
-            className="w-auto h-48 bg-cover bg-top rounded-lg border border-grayline"
+            className="w-auto h-32 bg-cover bg-top rounded-lg border border-grayline"
             style={{ backgroundImage: `url(${tallas})` }}
           ></div>
         </div>
 
         <div className="h-200 w-0.5 bg-grayline opacity-100 dark:opacity-50"></div>
 
-        <div className="flex flex-col gap-y-6">
+        <div className="flex flex-col gap-y-6 mt-[70px]">
           <div className="flex flex-col gap-y-4">
             <label
               htmlFor="tshirt-size"
@@ -350,41 +337,6 @@ function TeeDesignerForm() {
               onChange={handleAmount}
             ></input>
           </div>
-
-          <div className="flex flex-col gap-y-4">
-            <label
-              htmlFor="tshirt-customer-name"
-              className="text-sm font-medium text-babygray"
-            >
-              Nombre del cliente:
-            </label>
-            <input
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
-              type="text"
-              id="tshirt-customer-name"
-              placeholder="Escribe aquí tu nombre"
-              value={tshirtCustomerName}
-              onChange={handleCustomerName}
-            ></input>
-          </div>
-
-          <div className="flex flex-col gap-y-4">
-            <label
-              htmlFor="tshirt-customer-lastname"
-              className="text-sm font-medium text-babygray"
-            >
-              Apellido del cliente:
-            </label>
-            <input
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
-              type="text"
-              id="tshirt-customer-lastname"
-              placeholder="Escribe aquí tu apellido"
-              value={tshirtCustomerLastname}
-              onChange={handleCustomerLastname}
-            ></input>
-          </div>
-
           <div className="flex flex-col gap-y-4">
             <label
               htmlFor="tshirt-comments"
@@ -400,6 +352,13 @@ function TeeDesignerForm() {
               onChange={handleComments}
             ></textarea>
           </div>
+          <button
+            type="submit"
+            className="w-20 bg-summer text-darkiblue font-bold px-2 py-1 text-s rounded-md"
+            id="save-button"
+          >
+            Guardar
+          </button>
           <span className="text-darkiblue text-xs font-bold">
             Si necesitas un diseño aún más personalizado puedes contactarnos
             <br /> llamando al{" "}
@@ -411,14 +370,6 @@ function TeeDesignerForm() {
             </a>
             y con gusto te atenderemos!
           </span>
-          <button
-            type="submit"
-            className="w-20 bg-summer text-darkiblue font-bold px-2 py-1 text-s rounded-md"
-            id="save-button"
-            // onClick={handleSaveClick}
-          >
-            Guardar
-          </button>
         </div>
       </form>
     </div>

@@ -7,6 +7,7 @@ import Modal from "react-modal";
 function ProductsForm() {
   const [product, setProduct] = useState({
     name: "",
+    size: "",
     description: "",
     price: "",
     photoURL: null,
@@ -54,6 +55,7 @@ function ProductsForm() {
 
     if (
       !product.name ||
+      !product.size ||
       !product.description ||
       !product.price ||
       !product.photoURL
@@ -125,6 +127,19 @@ function ProductsForm() {
                     />
                   </div>
                   {errors.name && <p className="text-red-500">{errors.name}</p>}
+                </div>
+
+                <div className="flex flex-col mb-6">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      name="size"
+                      placeholder="Talla (opcional)"
+                      value={product.size}
+                      onChange={handleChange}
+                      className={`text-sm sm:text-base placeholder-gray-500 pl-2 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400`}
+                    />
+                  </div>
                 </div>
 
                 <div className="flex flex-col mb-6">

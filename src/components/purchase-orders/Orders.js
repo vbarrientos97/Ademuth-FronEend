@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import MenuNav from "../../components/nav/MenuNav";
-import { Link } from "react-router-dom";
 import { fetchOrders, deleteOrder } from "../../features/orderSlice";
 
 const ITEMS_PER_PAGE = 3;

@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser, setUser } from "../../features/authSlice";
+import { loginUser } from "../../features/authSlice";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 const Login = () => {
   const dispatch = useDispatch();
   const loginStatus = useSelector((state) => state.auth.status);
-
-  const user = useSelector((state) => state.auth.user);
   const isAdmin = useSelector((state) => state.auth.isAdmin);
 
   const [username, setUsername] = useState("");
@@ -39,10 +37,14 @@ const Login = () => {
           username,
           password,
         })
-      );
+      ).unwrap();
 
-      if (loginStatus === "succeeded") {
-        dispatch(setUser(response));
+      if (response.meta.requestStatus === "fulfilled") {
+        if (isAdmin) {
+          navigate("/purchase-orders");
+        } else {
+          navigate("/dashboard");
+        }
       } else {
         setFormError("Usuario o contraseña incorrectos");
       }
@@ -54,12 +56,10 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (loginStatus === "succeeded") {
-      if (isAdmin) {
-        navigate("/purchase-orders");
-      } else {
-        navigate("/dashboard");
-      }
+    if (loginStatus === "succeeded" && isAdmin) {
+      navigate("/purchase-orders");
+    } else if (loginStatus === "succeeded") {
+      navigate("/dashboard");
     }
   }, [loginStatus, isAdmin, navigate]);
 

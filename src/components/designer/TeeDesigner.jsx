@@ -10,7 +10,7 @@ function TeeDesigner() {
     <>
       <MenuNav />
       <div className="pt-24 pb-8 bg-graypage">
-        <div className="flex justify-center gap-x-16 max-w-[95%] mx-auto">
+        <div className="flex justify-between gap-x-10 max-w-[90%] mx-auto">
           <div>
             <h2 className="mb-6 text-darkiblue font-bold">
               Personaliza tu Camiseta
