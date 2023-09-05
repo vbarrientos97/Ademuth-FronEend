@@ -5,8 +5,23 @@ export const addProduct = createAsyncThunk(
   "products/addProduct",
   async (productData) => {
     try {
-      const response = await api.post("/products", productData);
-      return response.data;
+      const formData = new FormData();
+      formData.append("myFile", productData.photoURL);
+
+      const response = await api.post("/upload", formData);
+      const imageUrl = response.data.imageUrl;
+
+      const productWithUrl = {
+        name: productData.name,
+        description: productData.description,
+        size: productData.size,
+        price: productData.price,
+        photoURL: imageUrl,
+      };
+
+      const addResponse = await api.post("/products", productWithUrl);
+      console.log(addResponse);
+      return addResponse.data;
     } catch (error) {
       throw Error("Error al crear el producto.");
     }

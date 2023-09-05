@@ -48,7 +48,7 @@ function ColorsTable() {
         </h2>
         <Link
           to={"/create-color"}
-          className="w-40 flex gap-2 justify-center items-center bg-mainblue text-white font-bold px-2 py-1 text-xs rounded-md"
+          className="w-40 flex gap-2 justify-center items-center bg-mainblue hover:bg-blue-700 text-white font-bold px-2 py-1 text-xs rounded-md"
         >
           + Agregar Color
         </Link>
@@ -85,7 +85,7 @@ function ColorsTable() {
                         className="border-b bg-white border-grayline"
                       >
                         <td className="whitespace-nowrap px-6 py-4 font-medium">
-                          {color.id}
+                          {index}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
                           {color.name}
@@ -106,13 +106,13 @@ function ColorsTable() {
                         <td className="whitespace-nowrap px-6 py-4">
                           <div className="mt-2 flex gap-x-2 justify-center">
                             <Link
-                              className="bg-transparent text-babygray font-bold border-2 border-babygray px-2 py-1 text-xs rounded-md"
+                              className="bg-transparent text-babygray font-bold border-2 border-babygray hover:bg-babygray hover:text-white transition px-2 py-1 text-xs rounded-md"
                               to={`/edit-color/${color.id}`}
                             >
                               Editar
                             </Link>
                             <button
-                              className="bg-summer text-darkiblue font-bold px-2 py-1 text-xs rounded-md"
+                              className="bg-summer text-darkiblue font-bold hover:bg-summerhovered transition px-2 py-1 text-xs rounded-md"
                               onClick={() => handleDelete(color.id)}
                             >
                               Eliminar

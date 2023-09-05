@@ -37,13 +37,13 @@ const ConfirmationModal = ({ product, isOpen, onRequestClose, onConfirm }) => {
           min={1}
         />
         <button
-          className="bg-mainblue text-white px-3 py-1 rounded-md mt-3 mr-2"
+          className="bg-mainblue hover:bg-blue-700 text-white px-3 py-1 rounded-md mt-3 mr-2"
           onClick={handleConfirm}
         >
           <span className="mr-2">Agregar</span>
         </button>
         <button
-          className="bg-summer text-darkiblue px-3 py-1 rounded-md mt-3"
+          className="bg-summer text-darkiblue hover:bg-summerhovered transition px-3 py-1 rounded-md mt-3"
           onClick={onRequestClose}
         >
           Cancelar

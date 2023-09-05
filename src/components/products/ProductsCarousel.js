@@ -4,6 +4,7 @@ import Slider from "react-slick";
 import { fetchProducts } from "../../features/productSlice";
 import { addToPurchase } from "../../features/purchaseSlice";
 import ConfirmationModal from "./ConfirmationModal";
+import config from "../../api/config";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -70,7 +71,7 @@ const ProductsCarousel = () => {
               onClick={() => handleProductClick(product)}
             >
               <img
-                src={product.photoURL}
+                src={config.backendBaseUrl + product.photoURL}
                 alt={`Product ${index}`}
                 className="w-[100%] h-[100%] object-cover rounded-lg shadow-md"
               />

@@ -30,14 +30,10 @@ function DesignsForm() {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setDesign({
-          ...design,
-          image: reader.result,
-        });
-      };
-      reader.readAsDataURL(file);
+      setDesign({
+        ...design,
+        image: file,
+      });
     }
   };
 
@@ -85,9 +81,7 @@ function DesignsForm() {
 
   useEffect(() => {
     if (requestStatus === "succeeded") {
-      setTimeout(() => {
-        navigate("/tee-designer-admin");
-      }, 500);
+      navigate("/tee-designer-admin");
     }
   }, [requestStatus, navigate]);
 
@@ -150,19 +144,19 @@ function DesignsForm() {
                     </div>
                     <span className="pl-1 text-xs text-gray-600">
                       {design.image
-                        ? "Imagen: " + design.name + " seleccionada."
+                        ? "Imagen: " + design.image.name
                         : "No se ha seleccionado una imagen"}
                     </span>
                   </div>
                 </div>
 
                 <div className="mt-2 flex gap-x-2">
-                  <button className="bg-mainblue text-white font-bold px-2 py-1 rounded-sm">
+                  <button className="bg-mainblue hover:bg-blue-700 text-white font-bold px-2 py-1 rounded-md">
                     Guardar Diseño
                   </button>
                   <Link
                     to={"/tee-designer-admin"}
-                    className="bg-summer text-darkiblue font-bold px-2 py-1 rounded-sm"
+                    className="bg-summer text-darkiblue hover:bg-summerhovered transition font-bold px-2 py-1 rounded-md"
                   >
                     Cancelar
                   </Link>
@@ -186,13 +180,13 @@ function DesignsForm() {
             ¿Estás seguro de que deseas guardar los cambios?
           </p>
           <button
-            className="bg-mainblue text-white px-3 py-1 rounded-md mt-3 mr-2"
+            className="bg-mainblue hover:bg-blue-700 text-white px-3 py-1 rounded-md mt-3 mr-2"
             onClick={handleConfirm}
           >
             Sí, guardar
           </button>
           <button
-            className="bg-summer text-darkiblue px-3 py-1 rounded-md mt-3"
+            className="bg-summer text-darkiblue hover:bg-summerhovered transition px-3 py-1 rounded-md mt-3"
             onClick={() => setIsModalOpen(false)}
           >
             Cancelar

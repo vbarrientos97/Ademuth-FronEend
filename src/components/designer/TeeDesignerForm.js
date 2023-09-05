@@ -6,6 +6,7 @@ import { fetchDesigns } from "../../features/localDesignSlice";
 import { addTshirt } from "../../features/tshirtSlice";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
+import config from "../../api/config";
 import tallas from "../../images/tallas.jpg";
 
 function TeeDesignerForm() {
@@ -111,14 +112,14 @@ function TeeDesignerForm() {
   };
 
   // Handler for uploading a custom T-shirt picture
-  const handleCustomDesignChange = (event) => {
-    const file = event.target.files[0];
+  const handleCustomDesignChange = (e) => {
+    const file = e.target.files[0];
     setCustomDesignFile(file);
 
     var reader = new FileReader();
-    reader.onload = function (event) {
+    reader.onload = function (e) {
       var imgObj = new Image();
-      imgObj.src = event.target.result;
+      imgObj.src = e.target.result;
 
       imgObj.onload = function () {
         var canvas = canvasRef.current;
@@ -148,6 +149,7 @@ function TeeDesignerForm() {
     if (file) {
       reader.readAsDataURL(file);
     }
+    console.log(file, "veamos como se ve aca");
   };
 
   // Handler to reset the design on canvas
@@ -172,7 +174,7 @@ function TeeDesignerForm() {
       localDesign: selectedDesign,
       color: tshirtColor,
       size: tshirtSize,
-      customDesign: customDesignFile ? customDesignFile.name : null,
+      customDesign: customDesignFile,
       amount: tshirtAmount,
       comments: tshirtComments,
       price: tshirtPrice,
@@ -206,7 +208,10 @@ function TeeDesignerForm() {
             >
               <option value="">Seleccionar diseño...</option>
               {designs.map((design, index) => (
-                <option key={index} value={design.image}>
+                <option
+                  key={index}
+                  value={config.backendBaseUrl + design.image}
+                >
                   {design.name}
                 </option>
               ))}
@@ -225,7 +230,7 @@ function TeeDesignerForm() {
                 type="file"
                 id="tshirt-custom-design"
                 className="opacity-0 absolute inset-0 w-full h-full cursor-pointer"
-                onChange={handleCustomDesignChange}
+                onChange={(e) => handleCustomDesignChange(e)}
               />
               <div
                 role="button"
@@ -260,7 +265,7 @@ function TeeDesignerForm() {
           <div className="">
             <button
               type="button"
-              className="px-4 py-2 font-semibold text-xs text-white bg-mainblue rounded-md"
+              className="px-4 py-2 font-semibold text-xs text-white bg-mainblue hover:bg-blue-700 text-white font-bold rounded-md"
               onClick={handleResetClick}
             >
               Click aquí para eliminar diseño
@@ -354,7 +359,7 @@ function TeeDesignerForm() {
           </div>
           <button
             type="submit"
-            className="w-20 bg-summer text-darkiblue font-bold px-2 py-1 text-s rounded-md"
+            className="w-20 bg-summer text-darkiblue hover:bg-summerhovered transition font-bold px-2 py-1 text-s rounded-md"
             id="save-button"
           >
             Guardar

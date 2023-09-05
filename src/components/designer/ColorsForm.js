@@ -121,12 +121,12 @@ function ColorsForm() {
                   {errors.code && <p className="text-red-500">{errors.code}</p>}
                 </div>
                 <div className="mt-2 flex gap-x-2">
-                  <button className="bg-mainblue text-white font-bold px-2 py-1 rounded-sm">
+                  <button className="bg-mainblue hover:bg-blue-700 text-white font-bold px-2 py-1 rounded-md">
                     Guardar Color
                   </button>
                   <Link
                     to={"/tee-designer-admin"}
-                    className="bg-summer text-darkiblue font-bold px-2 py-1 rounded-sm"
+                    className="bg-summer text-darkiblue hover:bg-summerhovered transition font-bold px-2 py-1 rounded-md"
                   >
                     Cancelar
                   </Link>
@@ -151,7 +151,7 @@ function ColorsForm() {
             ¿Estás seguro de que deseas guardar los cambios?
           </p>
           <button
-            className="bg-mainblue text-white px-3 py-1 rounded-md mt-3 mr-2"
+            className="bg-mainblue hover:bg-blue-700 text-white px-3 py-1 rounded-md mt-3 mr-2"
             disabled={isLoading}
             onClick={handleConfirm}
           >
@@ -160,7 +160,7 @@ function ColorsForm() {
             </span>
           </button>
           <button
-            className="bg-summer text-darkiblue px-3 py-1 rounded-md mt-3"
+            className="bg-summer text-darkiblue hover:bg-summerhovered transition px-3 py-1 rounded-md mt-3"
             onClick={() => setIsModalOpen(false)}
           >
             Cancelar

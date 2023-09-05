@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import MenuNav from "../../components/nav/MenuNav";
 import { fetchTshirts, deleteTshirt } from "../../features/tshirtSlice";
 import { removeFromPurchase } from "../../features/purchaseSlice";
 import { addOrder } from "../../features/orderSlice";
+import Breadcrumb from "../nav/Breadcrumb";
 import { v4 as uuidv4 } from "uuid";
+import config from "../../api/config";
 
 const CustomerOrders = () => {
   const dispatch = useDispatch();
@@ -15,15 +17,10 @@ const CustomerOrders = () => {
   );
   const user = useSelector((state) => state.auth.user);
 
-  // const [customerName, setCustomerName] = useState("");
-  // const [customerLastname, setCustomerLastname] = useState("");
-  // const [design, setDesign] = useState("");
-  // const [size, setSize] = useState("");
-  // const [color, setColor] = useState("");
-  // const [product, setProduct] = useState("");
-  // const [amount, setAmount] = useState("");
-  // const [comments, setComments] = useState("");
-  // const [price, setPrice] = useState("");
+  const breadcrumbItems = [
+    { label: "Inicio", url: "/dashboard" },
+    { label: "Página Actual", url: "/customer-order" },
+  ];
 
   useEffect(() => {
     if (status === "idle") {
@@ -75,9 +72,10 @@ const CustomerOrders = () => {
     <div>
       <MenuNav />
       <div>
-        <div className="max-w-[80%] mx-auto pt-40 pb-16">
-          <div>
-            <div className="flex flex-col">
+        <div className="max-w-[80%] mx-auto pb-16">
+          <div className="pt-20">
+            <Breadcrumb items={breadcrumbItems} />
+            <div className="flex flex-col pt-10">
               <h1 className="mb-2 text-darkiblue font-bold">
                 Carrito de Compras
               </h1>
@@ -146,7 +144,13 @@ const CustomerOrders = () => {
                                 className="px-4 w-[150px] h-auto"
                               >
                                 <img
-                                  src={tshirt.localDesign}
+                                  src={
+                                    tshirt.localDesign || tshirt.customDesign
+                                      ? tshirt.localDesign ||
+                                        config.backendBaseUrl +
+                                          tshirt.customDesign
+                                      : `No se encontró una URL válida para el diseño ${index}`
+                                  }
                                   alt={`Diseño ${index}`}
                                   className="w-[100%] h-[100%] object-cover rounded-lg shadow-md"
                                 />
@@ -167,7 +171,7 @@ const CustomerOrders = () => {
                             <td className="whitespace-nowrap px-8 py-4">
                               <div className="mt-2 flex gap-x-2 justify-center">
                                 <button
-                                  className="bg-summer text-darkiblue font-bold px-2 py-1 text-xs rounded-md"
+                                  className="bg-summer text-darkiblue hover:bg-summerhovered transition font-bold px-2 py-1 text-xs rounded-md"
                                   onClick={() => handleDelete(tshirt.id)}
                                 >
                                   Eliminar
@@ -232,7 +236,7 @@ const CustomerOrders = () => {
                               <td className="whitespace-nowrap px-8 py-4">
                                 <div className="mt-2 flex gap-x-2 justify-center">
                                   <button
-                                    className="bg-summer text-darkiblue font-bold px-2 py-1 text-xs rounded-md"
+                                    className="bg-summer text-darkiblue hover:bg-summerhovered transition font-bold px-2 py-1 text-xs rounded-md"
                                     onClick={() =>
                                       handleDeleteOtherProduct(product.id)
                                     }
@@ -255,7 +259,7 @@ const CustomerOrders = () => {
                           <td className="whitespace-nowrap px-8 py-4">
                             <div className="mt-2 flex gap-x-2 justify-center">
                               <button
-                                className="bg-summer text-darkiblue font-bold px-2 py-1 text-xs rounded-md"
+                                className="bg-mainblue hover:bg-blue-700 text-white font-bold px-2 py-1 text-xs rounded-md"
                                 onClick={() => handleSave()}
                               >
                                 Guardar pedido

@@ -37,7 +37,7 @@ const Orders = () => {
     <div>
       <MenuNav />
       <div>
-        <div className="max-w-[70%] mx-auto pt-40 pb-16">
+        <div className="max-w-[70%] mx-auto pt-36 pb-16">
           <div>
             <div className="flex flex-col">
               <h1 className="mb-6 text-darkiblue font-bold">
@@ -127,7 +127,7 @@ const Orders = () => {
                             <td className="whitespace-nowrap px-6 py-4">
                               <div className="mt-2 flex gap-x-2 justify-center">
                                 <button
-                                  className="bg-summer text-darkiblue font-bold px-2 py-1 text-xs rounded-md"
+                                  className="bg-summer text-darkiblue hover:bg-summerhovered transition font-bold px-2 py-1 text-xs rounded-md"
                                   onClick={() => handleDelete(order.id)}
                                 >
                                   Eliminar

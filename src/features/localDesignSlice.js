@@ -5,8 +5,20 @@ export const addDesign = createAsyncThunk(
   "designs/addDesign",
   async (designData) => {
     try {
-      const response = await api.post("/localDesigns", designData);
-      return response.data;
+      const formData = new FormData();
+      formData.append("myFile", designData.image);
+
+      const response = await api.post("/upload", formData);
+      const imageUrl = response.data.imageUrl;
+
+      const designWithUrl = {
+        name: designData.name,
+        image: imageUrl,
+      };
+
+      const addResponse = await api.post("/localDesigns", designWithUrl);
+      console.log(addResponse);
+      return addResponse.data;
     } catch (error) {
       throw Error("Error al crear el diseño.");
     }

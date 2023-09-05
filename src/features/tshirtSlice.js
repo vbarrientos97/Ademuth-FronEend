@@ -1,16 +1,61 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../api/api";
 
+// export const addTshirt = createAsyncThunk(
+//   "tshirts/addTshirt",
+//   async (tshirtData) => {
+//     try {
+//       console.log(tshirtData);
+//       const response = await api.post("/tshirts", tshirtData);
+//       console.log(response.data);
+//       return response.data;
+//     } catch (error) {
+//       throw Error("Error al crear la personalización de camiseta.");
+//     }
+//   }
+// );
+
 export const addTshirt = createAsyncThunk(
   "tshirts/addTshirt",
   async (tshirtData) => {
     try {
-      console.log(tshirtData);
-      const response = await api.post("/tshirts", tshirtData);
-      console.log(response.data);
-      return response.data;
+      if (tshirtData.customDesign) {
+        const formData = new FormData();
+        formData.append("myFile", tshirtData.customDesign);
+
+        const responseUpload = await api.post("/upload", formData);
+        const imageUrl = responseUpload.data.imageUrl;
+
+        const tshirtWithUrl = {
+          id: tshirtData.id,
+          localDesign: tshirtData.localDesign,
+          color: tshirtData.color,
+          size: tshirtData.size,
+          customDesign: imageUrl || null,
+          amount: tshirtData.amount,
+          comments: tshirtData.comments,
+          price: tshirtData.price,
+        };
+
+        const addResponse = await api.post("/tshirts", tshirtWithUrl);
+        return addResponse.data;
+      } else {
+        const tshirt = {
+          id: tshirtData.id,
+          localDesign: tshirtData.localDesign,
+          color: tshirtData.color,
+          size: tshirtData.size,
+          customDesign: null,
+          amount: tshirtData.amount,
+          comments: tshirtData.comments,
+          price: tshirtData.price,
+        };
+
+        const addResponse = await api.post("/tshirts", tshirt);
+        return addResponse.data;
+      }
     } catch (error) {
-      throw Error("Error al crear la personalización de camiseta.");
+      throw Error("Error al crear la camiseta.");
     }
   }
 );

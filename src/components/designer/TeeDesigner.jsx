@@ -34,7 +34,6 @@ function TeeDesigner() {
               </div>
             </div>
           </div>
-
           <TeeDesignerForm />
         </div>
       </div>

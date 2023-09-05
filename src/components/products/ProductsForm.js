@@ -32,14 +32,10 @@ function ProductsForm() {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProduct({
-          ...product,
-          photoURL: reader.result,
-        });
-      };
-      reader.readAsDataURL(file);
+      setProduct({
+        ...product,
+        photoURL: file,
+      });
     }
   };
 
@@ -89,9 +85,7 @@ function ProductsForm() {
         );
       }
       setRequestStatus("succeeded");
-      setTimeout(() => {
-        navigate("/products");
-      }, 500);
+      navigate("/products");
     } catch (e) {
       setRequestStatus("failed");
     }
@@ -193,7 +187,7 @@ function ProductsForm() {
                     </div>
                     <span className="pl-1 text-xs text-gray-600">
                       {product.photoURL
-                        ? "Imagen: " + product.name + " seleccionada."
+                        ? "Imagen: " + product.photoURL.name
                         : "No se ha seleccionado una imagen"}
                     </span>
                   </div>
@@ -218,7 +212,7 @@ function ProductsForm() {
                   )}
                 </div>
 
-                <button className="bg-mainblue text-white font-bold px-2 py-1 rounded-sm">
+                <button className="bg-mainblue hover:bg-blue-700 text-white font-bold px-2 py-1 rounded-sm">
                   Guardar Producto
                 </button>
               </form>
@@ -241,7 +235,7 @@ function ProductsForm() {
             ¿Estás seguro de que deseas guardar los cambios?
           </p>
           <button
-            className="bg-mainblue text-white px-3 py-1 rounded-md mt-3 mr-2"
+            className="bg-mainblue hover:bg-blue-700 text-white px-3 py-1 rounded-md mt-3 mr-2"
             disabled={isLoading}
             onClick={handleConfirm}
           >
@@ -250,7 +244,7 @@ function ProductsForm() {
             </span>
           </button>
           <button
-            className="bg-summer text-darkiblue px-3 py-1 rounded-md mt-3"
+            className="bg-summer text-darkiblue  hover:bg-summerhovered transition px-3 py-1 rounded-md mt-3"
             onClick={() => setIsModalOpen(false)}
           >
             Cancelar
