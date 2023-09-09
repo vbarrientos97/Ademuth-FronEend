@@ -36,10 +36,10 @@ function ProductsList() {
   }
 
   return (
-    <div className="h-full bg-graypage">
+    <div>
       <MenuNav />
-      <div className="flex justify-center h-full">
-        <div className="pt-20">
+      <div className="flex justify-center h-full bg-graypage">
+        <div className="pt-20 pb-10">
           <Breadcrumb items={breadcrumbItems} />
           <div className="flex justify-center flex-col content-center mt-10">
             <div className="flex justify-between mb-6">
@@ -48,7 +48,7 @@ function ProductsList() {
               </h2>
               <Link
                 to={"/create-product"}
-                className="w-40 flex gap-2 justify-center items-center bg-mainblue hover:bg-blue-700 text-white font-bold px-2 py-1 text-xs rounded-md"
+                className="w-40 max-h-[40px] flex gap-2 justify-center items-center bg-mainblue hover:bg-blue-700 text-white font-bold px-2 py-1 text-xs rounded-md"
               >
                 + Agregar Producto
               </Link>

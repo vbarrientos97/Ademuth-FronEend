@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { deleteDesign, fetchDesigns } from "../../features/localDesignSlice";
 import config from "../../api/config";
+import Modal from "react-modal"; // Importa Modal aquí
 
 const ITEMS_PER_PAGE = 2;
 
@@ -10,6 +11,8 @@ function DesignsTable() {
   const designs = useSelector((state) => state.designs.designs);
   const statusDesign = useSelector((state) => state.designs.status);
   const [currentPage, setCurrentPage] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Nuevo estado para el modal
+  const [designToDeleteId, setDesignToDeleteId] = useState(null); // Nuevo estado para almacenar el ID del diseño a eliminar
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -19,7 +22,15 @@ function DesignsTable() {
   }, [statusDesign, dispatch]);
 
   const handleDeleteDesign = (id) => {
-    dispatch(deleteDesign(id));
+    setDesignToDeleteId(id); // Almacena el ID del diseño a eliminar
+    setIsModalOpen(true); // Abre el modal de confirmación
+  };
+
+  const handleConfirmDelete = async () => {
+    if (designToDeleteId) {
+      await dispatch(deleteDesign(designToDeleteId));
+      setIsModalOpen(false); // Cierra el modal después de la eliminación
+    }
   };
 
   const handlePageChange = (page) => {
@@ -32,8 +43,6 @@ function DesignsTable() {
   );
 
   const totalPages = Math.ceil(designs.length / ITEMS_PER_PAGE);
-
-  console.log(designs.image);
 
   return (
     <div className="pt-8 mb-6">
@@ -100,7 +109,7 @@ function DesignsTable() {
                               Editar
                             </Link>
                             <button
-                              className="bg-summer text-darkiblue hover:bg-summerhovered transition font-bold px-2 py-1 text-xs rounded-md"
+                              className="bg-summer text-darkiblue font-bold hover:bg-summerhovered transition px-2 py-1 text-xs rounded-md"
                               onClick={() => handleDeleteDesign(design.id)}
                             >
                               Eliminar
@@ -148,6 +157,32 @@ function DesignsTable() {
           </div>
         </div>
       </div>
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        contentLabel="Confirmation Modal"
+        className="fixed inset-0 flex items-center justify-center"
+        overlayClassName="fixed inset-0"
+      >
+        <div className="bg-black opacity-90 absolute inset-0"></div>
+        <div className="bg-white p-6 rounded-md shadow-md text-center relative">
+          <p className="mb-4">
+            ¿Estás seguro de que deseas eliminar este diseño?
+          </p>
+          <button
+            className="bg-mainblue hover:bg-blue-700 text-white px-3 py-1 rounded-md mt-3 mr-2"
+            onClick={handleConfirmDelete}
+          >
+            Eliminar
+          </button>
+          <button
+            className="bg-summer text-darkiblue hover:bg-summerhovered transition px-3 py-1 rounded-md mt-3"
+            onClick={() => setIsModalOpen(false)}
+          >
+            Cancelar
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 }

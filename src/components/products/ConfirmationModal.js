@@ -31,10 +31,11 @@ const ConfirmationModal = ({ product, isOpen, onRequestClose, onConfirm }) => {
         <p>¿Cuántos productos de "{product.name}" deseas comprar?</p>
         <input
           type="number"
-          className="text-center mt-3 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+          min={1}
+          max={1000}
+          className="text-center mt-3 w-full px-4 py-2 border rounded-md"
           value={amount}
           onChange={handleQuantityChange}
-          min={1}
         />
         <button
           className="bg-mainblue hover:bg-blue-700 text-white px-3 py-1 rounded-md mt-3 mr-2"

@@ -15,9 +15,13 @@ const purchaseSlice = createSlice({
         (product) => product.id !== productIdToRemove
       );
     },
+    clearSelectedProducts: (state) => {
+      state.selectedProducts = [];
+    },
   },
 });
 
-export const { addToPurchase, removeFromPurchase } = purchaseSlice.actions;
+export const { addToPurchase, removeFromPurchase, clearSelectedProducts } =
+  purchaseSlice.actions;
 
 export default purchaseSlice.reducer;

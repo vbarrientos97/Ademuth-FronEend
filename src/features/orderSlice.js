@@ -5,9 +5,7 @@ export const addOrder = createAsyncThunk(
   "orders/addOrder",
   async (orderData) => {
     try {
-      console.log(orderData);
       const response = await api.post("/purchaseOrders", orderData);
-      console.log(response.data);
       return response.data;
     } catch (error) {
       throw Error("Error al crear la orden de compra.");

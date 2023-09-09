@@ -1,20 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../api/api";
 
-// export const addTshirt = createAsyncThunk(
-//   "tshirts/addTshirt",
-//   async (tshirtData) => {
-//     try {
-//       console.log(tshirtData);
-//       const response = await api.post("/tshirts", tshirtData);
-//       console.log(response.data);
-//       return response.data;
-//     } catch (error) {
-//       throw Error("Error al crear la personalización de camiseta.");
-//     }
-//   }
-// );
-
 export const addTshirt = createAsyncThunk(
   "tshirts/addTshirt",
   async (tshirtData) => {
@@ -46,6 +32,7 @@ export const addTshirt = createAsyncThunk(
           color: tshirtData.color,
           size: tshirtData.size,
           customDesign: null,
+          demoDesign: tshirtData.demoDesign,
           amount: tshirtData.amount,
           comments: tshirtData.comments,
           price: tshirtData.price,

@@ -99,7 +99,7 @@ function ColorsForm() {
                       onChange={handleChange}
                       className={`text-sm sm:text-base placeholder-gray-500 pl-2 pr-4 rounded-lg border ${
                         errors.name ? "border-red-500" : "border-gray-400"
-                      } w-full py-2 focus:outline-none focus:border-blue-400`}
+                      } w-full py-2`}
                     />
                   </div>
                   {errors.name && <p className="text-red-500">{errors.name}</p>}
@@ -115,7 +115,7 @@ function ColorsForm() {
                       onChange={handleChange}
                       className={`text-sm sm:text-base placeholder-gray-500 pl-2 pr-4 rounded-lg border ${
                         errors.code ? "border-red-500" : "border-gray-400"
-                      } w-full py-2 focus:outline-none focus:border-blue-400`}
+                      } w-full py-2`}
                     />
                   </div>
                   {errors.code && <p className="text-red-500">{errors.code}</p>}

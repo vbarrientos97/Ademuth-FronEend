@@ -11,6 +11,7 @@ function DesignsForm() {
     image: null,
   });
 
+  const [initialDesign, setInitialDesign] = useState(null);
   const params = useParams();
   const designs = useSelector((state) => state.designs.designs);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,6 +20,18 @@ function DesignsForm() {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (params.id) {
+      const designToEdit = designs.find(
+        (design) => design.id === Number(params.id)
+      );
+      if (designToEdit) {
+        setInitialDesign(designToEdit);
+        setDesign(designToEdit);
+      }
+    }
+  }, [params.id, designs]);
 
   const handleChange = (e) => {
     setDesign({
@@ -105,12 +118,11 @@ function DesignsForm() {
                       onChange={handleChange}
                       className={`text-sm sm:text-base placeholder-gray-500 pl-2 pr-4 rounded-lg border ${
                         errors.name ? "border-red-500" : "border-gray-400"
-                      } w-full py-2 focus:outline-none focus:border-blue-400`}
+                      } w-full py-2`}
                     />
                   </div>
                   {errors.name && <p className="text-red-500">{errors.name}</p>}
                 </div>
-
                 <div className="flex flex-col mb-6">
                   <div className="relative">
                     <input
@@ -123,7 +135,7 @@ function DesignsForm() {
                     <div
                       role="button"
                       tabIndex="0"
-                      className="cursor-pointer w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring focus:border-blue-300 bg-white hover:bg-gray-100 text-gray-800"
+                      className="cursor-pointer w-full px-4 py-2 border border-gray-400 rounded-md bg-white hover:bg-gray-100 text-gray-800"
                     >
                       <span className="inline-block mr-2">
                         <svg
@@ -149,7 +161,6 @@ function DesignsForm() {
                     </span>
                   </div>
                 </div>
-
                 <div className="mt-2 flex gap-x-2">
                   <button className="bg-mainblue hover:bg-blue-700 text-white font-bold px-2 py-1 rounded-md">
                     Guardar Diseño

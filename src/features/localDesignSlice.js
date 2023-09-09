@@ -29,7 +29,23 @@ export const editDesign = createAsyncThunk(
   "designs/editDesign",
   async ({ id, designData }) => {
     try {
+      // Verificar si se proporcionó una nueva imagen
+      if (designData.image) {
+        // Crear un nuevo objeto FormData y agregar la nueva imagen
+        const formData = new FormData();
+        formData.append("myFile", designData.image);
+
+        // Enviar la nueva imagen al servidor y obtener la URL de la imagen actualizada
+        const imageResponse = await api.post("/upload", formData);
+        const newImageUrl = imageResponse.data.imageUrl;
+
+        // Actualizar designData con la nueva URL de la imagen
+        designData.image = newImageUrl;
+      }
+
+      // Realizar la solicitud PUT al servidor con los datos actualizados
       const response = await api.put(`/localDesigns/${id}`, designData);
+
       return response.data;
     } catch (error) {
       throw Error("Error al editar el diseño.");

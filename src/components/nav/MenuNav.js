@@ -1,15 +1,31 @@
+import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { logoutUser } from "../../features/authSlice";
 import { Link } from "react-router-dom";
+import { deleteTshirt } from "../../features/tshirtSlice";
+import { clearSelectedProducts } from "../../features/purchaseSlice";
 import logo from "../../images/logo.jpg";
 
 function MenuNav() {
   const isAdmin = useSelector((state) => state.auth.isAdmin);
-
+  const tshirts = useSelector((state) => state.tshirts.tshirts);
+  const myLogoRef = useRef(null);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    myLogoRef.current.focus();
+  }, []);
+
+  const clearCart = () => {
+    tshirts.forEach((tshirt) => {
+      dispatch(deleteTshirt(tshirt.id));
+    });
+    dispatch(clearSelectedProducts());
+  };
+
   const handleLogout = () => {
+    clearCart();
     dispatch(logoutUser());
   };
 
@@ -18,6 +34,8 @@ function MenuNav() {
       <Link to={isAdmin ? "/purchase-orders" : "/dashboard"}>
         <div className="w-6">
           <img
+            tabIndex={0}
+            ref={myLogoRef}
             className="absolute top-0 w-[70px]"
             alt="logo de la empresa"
             src={logo}

@@ -4,6 +4,7 @@ import { fabric } from "fabric";
 import { fetchColors } from "../../features/colorSlice";
 import { fetchDesigns } from "../../features/localDesignSlice";
 import { addTshirt } from "../../features/tshirtSlice";
+import { fetchTeeprice } from "../../features/priceSlice";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import config from "../../api/config";
@@ -16,20 +17,17 @@ function TeeDesignerForm() {
   const [tshirtAmount, setTshirtAmount] = useState("");
   const [tshirtComments, setTshirtComments] = useState("");
   const [customDesignFile, setCustomDesignFile] = useState(null);
-
-  const tshirtPrice = useSelector((state) => state.price.tshirtPrice);
-
   const colors = useSelector((state) => state.colors.colors);
   const status = useSelector((state) => state.colors.status);
-
   const designs = useSelector((state) => state.designs.designs);
   const statusDesign = useSelector((state) => state.designs.status);
-
+  const tshirtPrice = useSelector((state) => state.teeprice.teeprice);
+  const statusPrice = useSelector((state) => state.teeprice.status);
+  const [errors, setErrors] = useState({});
+  const canvasRef = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const canvasRef = useRef(null);
 
-  // Function to update the T-shirt image on the canvas
   function updateTshirtImage(imageURL) {
     const canvas = canvasRef.current;
     canvas.clear();
@@ -57,7 +55,6 @@ function TeeDesignerForm() {
     });
   }
 
-  // UseEffects
   useEffect(() => {
     const canvas = new fabric.Canvas("tshirt-canvas");
     canvasRef.current = canvas;
@@ -79,39 +76,39 @@ function TeeDesignerForm() {
     }
   }, [statusDesign, dispatch]);
 
-  // Handler for selecting color
+  useEffect(() => {
+    if (statusPrice === "idle") {
+      dispatch(fetchTeeprice());
+    }
+  }, [statusPrice, dispatch]);
+
   const handleColorRadioChange = (event) => {
     const color = event.target.value;
     document.getElementById("tshirt-div").style.backgroundColor = color;
     setTshirtColor(color);
   };
 
-  // Handler for selecting a T-shirt size
   const handleSize = (event) => {
     const size = event.target.value;
     setTshirtSize(size);
   };
 
-  // Handler for selecting the amount
   const handleAmount = (event) => {
     const amount = event.target.value;
     setTshirtAmount(amount);
   };
 
-  // Handler for selecting the aditional comments
   const handleComments = (event) => {
     const comments = event.target.value;
     setTshirtComments(comments);
   };
 
-  // Handler for selecting a local T-shirt picture
   const handleDesignChange = (event) => {
     const design = event.target.value;
     setSelectedDesign(design);
     updateTshirtImage(design);
   };
 
-  // Handler for uploading a custom T-shirt picture
   const handleCustomDesignChange = (e) => {
     const file = e.target.files[0];
     setCustomDesignFile(file);
@@ -149,10 +146,8 @@ function TeeDesignerForm() {
     if (file) {
       reader.readAsDataURL(file);
     }
-    console.log(file, "veamos como se ve aca");
   };
 
-  // Handler to reset the design on canvas
   const handleResetClick = () => {
     const canvas = canvasRef.current;
     canvas.clear();
@@ -162,28 +157,53 @@ function TeeDesignerForm() {
     canvas.renderAll();
   };
 
-  // Handler to set an id
   const generateUniqueTshirtId = () => {
     return uuidv4();
   };
 
-  // Handler to submit data to the server
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newTshirt = {
-      localDesign: selectedDesign,
-      color: tshirtColor,
-      size: tshirtSize,
-      customDesign: customDesignFile,
-      amount: tshirtAmount,
-      comments: tshirtComments,
-      price: tshirtPrice,
-      id: generateUniqueTshirtId(),
-    };
 
-    await dispatch(addTshirt(newTshirt)).then(() => {
-      navigate("/customer-order");
-    });
+    const newErrors = {};
+
+    if (!selectedDesign) {
+      newErrors.selectedDesign = "Por favor selecciona un diseño.";
+    }
+    if (!tshirtColor) {
+      newErrors.tshirtColor = "Por favor selecciona un color.";
+    }
+    if (!tshirtSize) {
+      newErrors.tshirtSize = "Por favor selecciona una talla.";
+    }
+    if (!tshirtAmount) {
+      newErrors.tshirtAmount = "Por favor ingresa la cantidad.";
+    }
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      const newTshirt = {
+        localDesign: selectedDesign,
+        color: tshirtColor,
+        size: tshirtSize,
+        customDesign: customDesignFile,
+        amount: tshirtAmount,
+        comments: tshirtComments,
+        price: tshirtPrice[0].teeprice,
+        id: generateUniqueTshirtId(),
+      };
+
+      await dispatch(addTshirt(newTshirt)).then(() => {
+        navigate("/customer-order");
+      });
+
+      setSelectedDesign("");
+      setTshirtColor("");
+      setTshirtSize("");
+      setTshirtAmount("");
+      setTshirtComments("");
+      setCustomDesignFile(null);
+    }
   };
 
   return (
@@ -202,7 +222,7 @@ function TeeDesignerForm() {
             </label>
             <select
               id="tshirt-local-design"
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+              className="w-full px-4 py-2 border rounded-md"
               onChange={handleDesignChange}
               value={selectedDesign}
             >
@@ -235,7 +255,7 @@ function TeeDesignerForm() {
               <div
                 role="button"
                 tabIndex="0"
-                className="cursor-pointer w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300 bg-white hover:bg-gray-100 text-gray-800"
+                className="cursor-pointer w-full px-4 py-2 border rounded-md bg-white hover:bg-gray-100 text-gray-800"
               >
                 <span className="inline-block mr-2">
                   <svg
@@ -260,6 +280,9 @@ function TeeDesignerForm() {
                   : "No se ha seleccionado una imagen"}
               </span>
             </div>
+            {errors.selectedDesign && (
+              <p className="text-red-500">{errors.selectedDesign}</p>
+            )}
           </div>
 
           <div className="">
@@ -287,6 +310,7 @@ function TeeDesignerForm() {
                     className="circle-color"
                     title={color.name}
                     style={{ backgroundColor: color.code }}
+                    tabIndex={0}
                     onClick={() =>
                       handleColorRadioChange({ target: { value: color.code } })
                     }
@@ -294,6 +318,9 @@ function TeeDesignerForm() {
                 </label>
               ))}
             </div>
+            {errors.tshirtColor && (
+              <p className="text-red-500">{errors.tshirtColor}</p>
+            )}
           </div>
           <div
             className="w-auto h-32 bg-cover bg-top rounded-lg border border-grayline"
@@ -313,7 +340,7 @@ function TeeDesignerForm() {
             </label>
             <select
               id="tshirt-size"
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+              className="w-full px-4 py-2 border rounded-md"
               onChange={handleSize}
               value={tshirtSize}
             >
@@ -324,6 +351,9 @@ function TeeDesignerForm() {
               <option value="L">L</option>
               <option value="XL">XL</option>
             </select>
+            {errors.tshirtSize && (
+              <p className="text-red-500">{errors.tshirtSize}</p>
+            )}
           </div>
 
           <div className="flex flex-col gap-y-4">
@@ -334,13 +364,18 @@ function TeeDesignerForm() {
               Cantidad de camisetas que deseas ordenar:
             </label>
             <input
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+              className="w-full px-4 py-2 border rounded-md"
               type="number"
+              min={1}
+              max={1000}
               id="tshirt-amount"
               placeholder="Digita la cantidad"
               value={tshirtAmount}
               onChange={handleAmount}
             ></input>
+            {errors.tshirtAmount && (
+              <p className="text-red-500">{errors.tshirtAmount}</p>
+            )}
           </div>
           <div className="flex flex-col gap-y-4">
             <label
@@ -350,7 +385,7 @@ function TeeDesignerForm() {
               Añadir comentarios:
             </label>
             <textarea
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+              className="w-full px-4 py-2 border rounded-md"
               id="tshirt-comments"
               placeholder="Escribe aquí tus comentarios adicionales..."
               value={tshirtComments}

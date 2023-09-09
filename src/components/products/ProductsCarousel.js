@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Slider from "react-slick";
 import { fetchProducts } from "../../features/productSlice";
 import { addToPurchase } from "../../features/purchaseSlice";
+import { useNavigate } from "react-router-dom";
 import ConfirmationModal from "./ConfirmationModal";
 import config from "../../api/config";
 import "slick-carousel/slick/slick.css";
@@ -12,6 +13,7 @@ const ProductsCarousel = () => {
   const products = useSelector((state) => state.products.products);
   const status = useSelector((state) => state.products.status);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (status === "idle") {
@@ -20,11 +22,12 @@ const ProductsCarousel = () => {
   }, [status, dispatch]);
 
   const settings = {
-    dots: true,
+    dots: false,
     infinite: true,
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
+    accessibility: true,
     responsive: [
       {
         breakpoint: 1024,
@@ -51,9 +54,11 @@ const ProductsCarousel = () => {
     setIsConfirmationOpen(true);
   };
 
-  const handleConfirmPurchase = (product, amount) => {
+  const handleConfirmPurchase = async (product, amount) => {
     const productWithAmount = { ...product, amount };
-    dispatch(addToPurchase(productWithAmount));
+    await dispatch(addToPurchase(productWithAmount));
+    navigate("/customer-order");
+
     setIsConfirmationOpen(false);
   };
 
@@ -64,20 +69,19 @@ const ProductsCarousel = () => {
       </h2>
       <Slider {...settings} className="mb-8 relative">
         {products.map((product, index) => (
-          <>
+          <div key={index} tabIndex={index} className="w-[306px]">
             <div
-              key={index}
-              className="px-4 w-[100%] h-[350px] cursor-pointer relative"
+              className="p-2 w-[100%] h-[350px] cursor-pointer relative"
               onClick={() => handleProductClick(product)}
             >
               <img
+                tabIndex={index}
                 src={config.backendBaseUrl + product.photoURL}
                 alt={`Product ${index}`}
                 className="w-[100%] h-[100%] object-cover rounded-lg shadow-md"
               />
               <div
-                key={index}
-                className="w-[100%] h-[350px] absolute top-0 left-0 px-4 transition-opacity duration-300 opacity-0 hover:opacity-90"
+                className="p-2 w-[100%] h-[350px] absolute top-0 left-0 transition-opacity duration-300 opacity-0 hover:opacity-90"
                 onClick={() => handleProductClick(product)}
               >
                 <div className="w-[100%] h-[100%] text-white bg-darkiblue rounded-lg p-4 flex flex-col justify-end">
@@ -89,7 +93,7 @@ const ProductsCarousel = () => {
                 </div>
               </div>
             </div>
-          </>
+          </div>
         ))}
       </Slider>
       {selectedProduct && (

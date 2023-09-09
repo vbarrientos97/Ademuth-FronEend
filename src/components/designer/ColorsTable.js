@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { deleteColor, fetchColors } from "../../features/colorSlice";
+import Modal from "react-modal";
 
 const ITEMS_PER_PAGE = 4;
 
@@ -9,6 +10,8 @@ function ColorsTable() {
   const colorsData = useSelector((state) => state.colors.colors);
   const status = useSelector((state) => state.colors.status);
   const [currentPage, setCurrentPage] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [colorToDeleteId, setColorToDeleteId] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -24,8 +27,14 @@ function ColorsTable() {
   }, [status]);
 
   const handleDelete = (id) => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar este color?")) {
-      dispatch(deleteColor(id));
+    setColorToDeleteId(id);
+    setIsModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (colorToDeleteId) {
+      await dispatch(deleteColor(colorToDeleteId));
+      setIsModalOpen(false);
     }
   };
 
@@ -160,6 +169,32 @@ function ColorsTable() {
           </div>
         </div>
       </div>
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        contentLabel="Confirmation Modal"
+        className="fixed inset-0 flex items-center justify-center"
+        overlayClassName="fixed inset-0"
+      >
+        <div className="bg-black opacity-90 absolute inset-0"></div>
+        <div className="bg-white p-6 rounded-md shadow-md text-center relative">
+          <p className="mb-4">
+            ¿Estás seguro de que deseas eliminar este color?
+          </p>
+          <button
+            className="bg-mainblue hover:bg-blue-700 text-white px-3 py-1 rounded-md mt-3 mr-2"
+            onClick={handleConfirmDelete}
+          >
+            Eliminar
+          </button>
+          <button
+            className="bg-summer text-darkiblue hover:bg-summerhovered transition px-3 py-1 rounded-md mt-3"
+            onClick={() => setIsModalOpen(false)}
+          >
+            Cancelar
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 }

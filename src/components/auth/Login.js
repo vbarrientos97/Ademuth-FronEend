@@ -90,7 +90,7 @@ const Login = () => {
                     type="text"
                     className={`text-sm sm:text-base placeholder-gray-500 pl-10 pr-4 rounded-lg border ${
                       errors.username ? "border-red-500" : "border-gray-400"
-                    } w-full py-2 focus:outline-none focus:border-blue-400`}
+                    } w-full py-2`}
                     placeholder="Nombre de usuario"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
@@ -123,7 +123,7 @@ const Login = () => {
                     type="password"
                     className={`text-sm sm:text-base placeholder-gray-500 pl-10 pr-4 rounded-lg border ${
                       errors.password ? "border-red-500" : "border-gray-400"
-                    } w-full py-2 focus:outline-none focus:border-blue-400`}
+                    } w-full py-2`}
                     placeholder="Contraseña"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -138,7 +138,7 @@ const Login = () => {
               <div className="flex w-full">
                 <button
                   type="button"
-                  className="flex items-center justify-center focus:outline-none text-white text-sm sm:text-base bg-blue-600 hover:bg-blue-700 rounded py-2 w-full transition duration-150 ease-in"
+                  className="flex items-center justify-center text-white text-sm sm:text-base bg-blue-600 hover:bg-blue-700 rounded py-2 w-full transition duration-150 ease-in"
                   disabled={isLoggingIn}
                   onClick={handleLogin}
                 >

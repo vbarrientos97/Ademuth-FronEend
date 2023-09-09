@@ -117,7 +117,7 @@ function ProductsForm() {
                       onChange={handleChange}
                       className={`text-sm sm:text-base placeholder-gray-500 pl-2 pr-4 rounded-lg border ${
                         errors.name ? "border-red-500" : "border-gray-400"
-                      } w-full py-2 focus:outline-none focus:border-blue-400`}
+                      } w-full py-2`}
                     />
                   </div>
                   {errors.name && <p className="text-red-500">{errors.name}</p>}
@@ -131,7 +131,7 @@ function ProductsForm() {
                       placeholder="Talla (opcional)"
                       value={product.size}
                       onChange={handleChange}
-                      className={`text-sm sm:text-base placeholder-gray-500 pl-2 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400`}
+                      className={`text-sm sm:text-base placeholder-gray-500 pl-2 pr-4 rounded-lg border border-gray-400 w-full py-2`}
                     />
                   </div>
                 </div>
@@ -146,7 +146,7 @@ function ProductsForm() {
                       onChange={handleChange}
                       className={`text-sm sm:text-base placeholder-gray-500 pl-2 pr-4 rounded-lg border ${
                         errors.price ? "border-red-500" : "border-gray-400"
-                      } w-full py-2 focus:outline-none focus:border-blue-400`}
+                      } w-full py-2`}
                     />
                   </div>
                   {errors.price && (
@@ -166,7 +166,7 @@ function ProductsForm() {
                     <div
                       role="button"
                       tabIndex="0"
-                      className="cursor-pointer w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring focus:border-blue-300 bg-white hover:bg-gray-100 text-gray-800"
+                      className="cursor-pointer w-full px-4 py-2 border border-gray-400 rounded-md bg-white hover:bg-gray-100 text-gray-800"
                     >
                       <span className="inline-block mr-2">
                         <svg
@@ -204,7 +204,7 @@ function ProductsForm() {
                         errors.description
                           ? "border-red-500"
                           : "border-gray-400"
-                      } w-full py-2 focus:outline-none focus:border-blue-400`}
+                      } w-full py-2`}
                     ></textarea>
                   </div>
                   {errors.description && (

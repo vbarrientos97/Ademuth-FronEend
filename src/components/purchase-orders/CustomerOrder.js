@@ -1,21 +1,28 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import MenuNav from "../../components/nav/MenuNav";
 import { fetchTshirts, deleteTshirt } from "../../features/tshirtSlice";
-import { removeFromPurchase } from "../../features/purchaseSlice";
+import {
+  removeFromPurchase,
+  clearSelectedProducts,
+} from "../../features/purchaseSlice";
 import { addOrder } from "../../features/orderSlice";
+import { useNavigate } from "react-router-dom";
 import Breadcrumb from "../nav/Breadcrumb";
 import { v4 as uuidv4 } from "uuid";
 import config from "../../api/config";
+import Modal from "react-modal";
 
 const CustomerOrders = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const tshirts = useSelector((state) => state.tshirts.tshirts);
   const status = useSelector((state) => state.tshirts.status);
   const selectedProducts = useSelector(
     (state) => state.purchases.selectedProducts
   );
   const user = useSelector((state) => state.auth.user);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const breadcrumbItems = [
     { label: "Inicio", url: "/dashboard" },
@@ -52,6 +59,13 @@ const CustomerOrders = () => {
     return uuidv4();
   };
 
+  const clearCart = () => {
+    tshirts.forEach((tshirt) => {
+      dispatch(deleteTshirt(tshirt.id));
+    });
+    dispatch(clearSelectedProducts());
+  };
+
   const handleSave = async () => {
     const newOrder = {
       customerName: user && user.name,
@@ -64,7 +78,8 @@ const CustomerOrders = () => {
     await dispatch(addOrder(newOrder))
       .unwrap()
       .then(() => {
-        console.log("Order added successfully");
+        clearCart();
+        navigate("/dashboard");
       });
   };
 
@@ -72,7 +87,7 @@ const CustomerOrders = () => {
     <div>
       <MenuNav />
       <div>
-        <div className="max-w-[80%] mx-auto pb-16">
+        <div className="max-w-[86%] mx-auto pb-16">
           <div className="pt-20">
             <Breadcrumb items={breadcrumbItems} />
             <div className="flex flex-col pt-10">
@@ -260,7 +275,7 @@ const CustomerOrders = () => {
                             <div className="mt-2 flex gap-x-2 justify-center">
                               <button
                                 className="bg-mainblue hover:bg-blue-700 text-white font-bold px-2 py-1 text-xs rounded-md"
-                                onClick={() => handleSave()}
+                                onClick={() => setIsModalOpen(true)}
                               >
                                 Guardar pedido
                               </button>
@@ -269,6 +284,33 @@ const CustomerOrders = () => {
                         </tr>
                       </thead>
                     </table>
+
+                    <Modal
+                      isOpen={isModalOpen}
+                      onRequestClose={() => setIsModalOpen(false)}
+                      contentLabel="Confirmation Modal"
+                      className="fixed inset-0 flex items-center justify-center"
+                      overlayClassName="fixed inset-0"
+                    >
+                      <div className="bg-black opacity-90 absolute inset-0"></div>
+                      <div className="bg-white p-6 rounded-md shadow-md text-center relative">
+                        <p className="mb-4">
+                          ¿Estás seguro de que deseas guardar los cambios?
+                        </p>
+                        <button
+                          className="bg-mainblue hover:bg-blue-700 text-white px-3 py-1 rounded-md mt-3 mr-2"
+                          onClick={() => handleSave()}
+                        >
+                          Sí, guardar
+                        </button>
+                        <button
+                          className="bg-summer text-darkiblue hover:bg-summerhovered transition px-3 py-1 rounded-md mt-3"
+                          onClick={() => setIsModalOpen(false)}
+                        >
+                          Cancelar
+                        </button>
+                      </div>
+                    </Modal>
                   </div>
                 </div>
               </div>
