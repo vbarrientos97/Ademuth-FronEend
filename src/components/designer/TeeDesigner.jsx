@@ -10,13 +10,13 @@ function TeeDesigner() {
     <>
       <MenuNav />
       <div className="pt-24 pb-8 bg-graypage">
-        <div className="flex justify-between gap-x-10 max-w-[90%] mx-auto">
+        <div className="flex justify-between gap-x-10 max-w-[90%] mx-auto md:flex-col lg:flex-row">
           <div>
             <h2 className="mb-6 text-darkiblue font-bold">
               Personaliza tu Camiseta
             </h2>
             <div className="p-6 bg-white rounded-md">
-              <div id="tshirt-div">
+              <div id="tshirt-div" className="md:mx-auto">
                 <img
                   alt="imagen de camiseta basica"
                   id="tshirt-backgroundpicture"

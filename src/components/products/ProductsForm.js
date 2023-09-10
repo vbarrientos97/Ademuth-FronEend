@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addProduct, editProduct } from "../../features/productSlice";
 import { useNavigate, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Modal from "react-modal";
 
 function ProductsForm() {
@@ -211,10 +212,17 @@ function ProductsForm() {
                     <p className="text-red-500">{errors.description}</p>
                   )}
                 </div>
-
-                <button className="bg-mainblue hover:bg-blue-700 text-white font-bold px-2 py-1 rounded-sm">
-                  Guardar Producto
-                </button>
+                <div className="mt-2 flex gap-x-2">
+                  <button className="bg-mainblue hover:bg-blue-700 text-white font-bold px-2 py-1 rounded-md">
+                    Guardar Producto
+                  </button>
+                  <Link
+                    to={"/products"}
+                    className="bg-summer text-darkiblue hover:bg-summerhovered transition font-bold px-2 py-1 rounded-md"
+                  >
+                    Cancelar
+                  </Link>
+                </div>
               </form>
             </div>
           </div>

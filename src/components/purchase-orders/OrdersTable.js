@@ -58,19 +58,21 @@ const OrderTable = () => {
               <td className="px-6 py-4 whitespace-no-wrap">
                 ₡{order.totalPrice}
               </td>
-              <td className="px-6 py-4 whitespace-no-wraps text-right">
-                <button
-                  onClick={() => openModal(order)}
-                  className="bg-transparent text-babygray font-bold border-2 border-babygray hover:bg-babygray hover:text-white transition px-2 py-1 text-xs rounded-md mr-2"
-                >
-                  Ver Detalles
-                </button>
-                <button
-                  onClick={() => handleDelete(order.id)}
-                  className="bg-summer text-darkiblue font-bold hover:bg-summerhovered transition px-2 py-1 text-xs rounded-md"
-                >
-                  Eliminar
-                </button>
+              <td className="px-6 py-4 whitespace-no-wraps">
+                <div className="flex justify-end md:flex-col md:gap-2 lg:flex-row">
+                  <button
+                    onClick={() => openModal(order)}
+                    className="bg-transparent text-babygray font-bold border-2 border-babygray hover:bg-babygray hover:text-white transition px-2 py-1 text-xs rounded-md mr-2 md:mr-0"
+                  >
+                    Ver Detalles
+                  </button>
+                  <button
+                    onClick={() => handleDelete(order.id)}
+                    className="bg-summer text-darkiblue font-bold hover:bg-summerhovered transition px-2 py-1 text-xs rounded-md"
+                  >
+                    Eliminar
+                  </button>
+                </div>
               </td>
             </tr>
           ))}

@@ -132,7 +132,6 @@ function ColorsTable() {
                     ))}
                   </tbody>
                 </table>
-                {/* Paginacion */}
                 <div className="flex justify-end px-6 pt-2 pb-2 bg-white">
                   <nav className="inline-flex rounded-md shadow">
                     <button

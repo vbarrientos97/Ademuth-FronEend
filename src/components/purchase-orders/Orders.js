@@ -28,7 +28,7 @@ const Orders = () => {
   return (
     <div className="bg-graypage h-full">
       <MenuNav />
-      <div className="max-w-[70%] mx-auto pt-36 pb-16">
+      <div className="md:w-[80%] lg:w-[70%] mx-auto pt-36 pb-16">
         <div>
           <div className="flex flex-col">
             <h1 className="mb-6 text-darkiblue font-bold">Órdenes de Compra</h1>

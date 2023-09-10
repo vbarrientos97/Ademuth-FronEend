@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import MenuNav from "../../components/nav/MenuNav";
 import { fetchTshirts, deleteTshirt } from "../../features/tshirtSlice";
@@ -23,6 +23,8 @@ const CustomerOrders = () => {
   );
   const user = useSelector((state) => state.auth.user);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalAction, setModalAction] = useState(null);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
   const breadcrumbItems = [
     { label: "Inicio", url: "/dashboard" },
@@ -36,11 +38,15 @@ const CustomerOrders = () => {
   }, [status, dispatch]);
 
   const handleDelete = (id) => {
-    dispatch(deleteTshirt(id));
+    setItemToDelete(id);
+    setModalAction("delete");
+    setIsModalOpen(true);
   };
 
   const handleDeleteOtherProduct = (id) => {
     dispatch(removeFromPurchase(id));
+    setModalAction("delete");
+    setIsModalOpen(true);
   };
 
   const calculateTotalPrice = () => {
@@ -83,11 +89,22 @@ const CustomerOrders = () => {
       });
   };
 
+  const confirmAction = async () => {
+    if (modalAction === "delete") {
+      dispatch(deleteTshirt(itemToDelete));
+    } else if (modalAction === "save") {
+      await handleSave();
+    }
+
+    setIsModalOpen(false);
+    setModalAction(null);
+  };
+
   return (
     <div>
       <MenuNav />
       <div>
-        <div className="max-w-[86%] mx-auto pb-16">
+        <div className="md:w-[80%] lg:w-[80%] mx-auto pb-16">
           <div className="pt-20">
             <Breadcrumb items={breadcrumbItems} />
             <div className="flex flex-col pt-10">
@@ -275,7 +292,10 @@ const CustomerOrders = () => {
                             <div className="mt-2 flex gap-x-2 justify-center">
                               <button
                                 className="bg-mainblue hover:bg-blue-700 text-white font-bold px-2 py-1 text-xs rounded-md"
-                                onClick={() => setIsModalOpen(true)}
+                                onClick={() => {
+                                  setModalAction("save");
+                                  setIsModalOpen(true);
+                                }}
                               >
                                 Guardar pedido
                               </button>
@@ -295,13 +315,17 @@ const CustomerOrders = () => {
                       <div className="bg-black opacity-90 absolute inset-0"></div>
                       <div className="bg-white p-6 rounded-md shadow-md text-center relative">
                         <p className="mb-4">
-                          ¿Estás seguro de que deseas guardar los cambios?
+                          {modalAction === "delete"
+                            ? "¿Seguro que deseas eliminar este artículo?"
+                            : "¿Estás seguro de que deseas guardar los cambios?"}
                         </p>
                         <button
                           className="bg-mainblue hover:bg-blue-700 text-white px-3 py-1 rounded-md mt-3 mr-2"
-                          onClick={() => handleSave()}
+                          onClick={confirmAction}
                         >
-                          Sí, guardar
+                          {modalAction === "delete"
+                            ? "Eliminar"
+                            : "Sí, guardar"}
                         </button>
                         <button
                           className="bg-summer text-darkiblue hover:bg-summerhovered transition px-3 py-1 rounded-md mt-3"

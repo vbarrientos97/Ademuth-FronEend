@@ -10,7 +10,7 @@ function TeeDesignerAdmin() {
 
   return (
     <div className="h-full">
-      <div className="max-w-screen-lg mx-auto">
+      <div className="md:w-[80%] lg:w-[70%] mx-auto">
         <MenuNav />
         <div className="pt-28 pb-20">
           <Breadcrumb items={breadcrumbItems} />

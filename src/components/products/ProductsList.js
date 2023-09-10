@@ -1,16 +1,20 @@
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteProduct, fetchProducts } from "../../features/productSlice";
-import { useEffect } from "react";
 import MenuNav from "../nav/MenuNav";
 import { Link } from "react-router-dom";
 import Breadcrumb from "../nav/Breadcrumb";
 import config from "../../api/config";
+import Modal from "react-modal";
+import { deleteProduct, fetchProducts } from "../../features/productSlice";
 
 function ProductsList() {
   const products = useSelector((state) => state.products.products);
   const status = useSelector((state) => state.products.status);
   const error = useSelector((state) => state.products.error);
   const dispatch = useDispatch();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [productIdToDelete, setProductIdToDelete] = useState(null);
 
   const breadcrumbItems = [
     { label: "Inicio", url: "/purchase-orders" },
@@ -24,7 +28,13 @@ function ProductsList() {
   }, [status, dispatch]);
 
   const handleDelete = (id) => {
-    dispatch(deleteProduct(id));
+    setProductIdToDelete(id);
+    setIsModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    dispatch(deleteProduct(productIdToDelete));
+    setIsModalOpen(false);
   };
 
   if (status === "loading") {
@@ -38,8 +48,8 @@ function ProductsList() {
   return (
     <div>
       <MenuNav />
-      <div className="flex justify-center h-full bg-graypage">
-        <div className="pt-20 pb-10">
+      <div className="h-full bg-graypage">
+        <div className="md:w-[80%] lg:w-[60%] mx-auto pt-20 pb-10">
           <Breadcrumb items={breadcrumbItems} />
           <div className="flex justify-center flex-col content-center mt-10">
             <div className="flex justify-between mb-6">
@@ -53,7 +63,7 @@ function ProductsList() {
                 + Agregar Producto
               </Link>
             </div>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-4">
               {products.map((product) => (
                 <div
                   key={product.id}
@@ -73,7 +83,7 @@ function ProductsList() {
                     alt={product.name}
                     className="w-40 h-40 mx-auto mt-2 rounded-md object-cover"
                   />
-                  <div className="mt-2 flex gap-x-2 justify-center">
+                  <div className="flex justify-end md:flex-col md:gap-2 lg:flex-row mt-2 flex gap-x-2 justify-center">
                     <Link
                       className="bg-transparent text-babygray hover:bg-babygray hover:text-white transition font-bold border-2 border-babygray px-2 py-1 text-xs rounded-md"
                       to={`/edit-product/${product.id}`}
@@ -93,6 +103,30 @@ function ProductsList() {
           </div>
         </div>
       </div>
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        contentLabel="Confirmation Modal"
+        className="fixed inset-0 flex items-center justify-center"
+        overlayClassName="fixed inset-0"
+      >
+        <div className="bg-black opacity-90 absolute inset-0"></div>
+        <div className="bg-white p-6 rounded-md shadow-md text-center relative">
+          <p className="mb-4">¿Seguro que deseas eliminar este producto?</p>
+          <button
+            className="bg-mainblue hover:bg-blue-700 text-white px-3 py-1 rounded-md mt-3 mr-2"
+            onClick={confirmDelete}
+          >
+            Eliminar
+          </button>
+          <button
+            className="bg-summer text-darkiblue hover:bg-summerhovered transition px-3 py-1 rounded-md mt-3"
+            onClick={() => setIsModalOpen(false)}
+          >
+            Cancelar
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 }
