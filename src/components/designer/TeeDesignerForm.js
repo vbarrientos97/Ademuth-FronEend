@@ -323,8 +323,11 @@ function TeeDesignerForm() {
             )}
           </div>
           <div
-            className="w-auto h-32 bg-cover bg-top rounded-lg border border-grayline"
-            style={{ backgroundImage: `url(${tallas})` }}
+            className="w-auto h-32 bg-top bg-no-repeat lg:bg-[length:76%] bg-white rounded-lg border border-grayline md:bg-cover"
+            style={{
+              backgroundImage: `url(${tallas})`,
+              backgroundPositionY: "20%",
+            }}
           ></div>
         </div>
 
@@ -406,7 +409,7 @@ function TeeDesignerForm() {
               className="text-blue-600 visited:text-purple-600"
               href="tel:84232830"
             >
-              8423-2830{" "}
+              8729-0938{" "}
             </a>
             y con gusto te atenderemos!
           </span>

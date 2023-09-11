@@ -5,7 +5,7 @@ import { logoutUser } from "../../features/authSlice";
 import { Link } from "react-router-dom";
 import { deleteTshirt } from "../../features/tshirtSlice";
 import { clearSelectedProducts } from "../../features/purchaseSlice";
-import logo from "../../images/logo.jpg";
+import logo from "../../images/logo.png";
 
 function MenuNav() {
   const isAdmin = useSelector((state) => state.auth.isAdmin);
@@ -36,7 +36,7 @@ function MenuNav() {
           <img
             tabIndex={0}
             ref={myLogoRef}
-            className="absolute top-0 w-[70px]"
+            className="absolute top-0 w-[90px]"
             alt="logo de la empresa"
             src={logo}
           />

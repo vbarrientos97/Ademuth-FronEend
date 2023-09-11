@@ -1,6 +1,6 @@
 import React from "react";
 import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa"; // Importa los íconos de Tailwind CSS
-import logo from "../../images/logo.jpg";
+import logo from "../../images/logo.png";
 
 const Footer = () => {
   return (
@@ -30,9 +30,16 @@ const Footer = () => {
               <FaInstagram className="w-6 h-6" />{" "}
             </a>
           </div>
-          <div className="text-center mb-4">
-            <p>Teléfono: +1 123 456 789</p>
-            <p>Email: info@example.com</p>
+          <div className="text-center mb-4 flex flex-col">
+            <a
+              className="text-white visited:text-purple-600"
+              href="tel:84232830"
+            >
+              Teléfono: +(506) 8729-0938{" "}
+            </a>
+            <a href="mailto:talleresperanza@hotmail.com">
+              Correo: talleresperanza@hotmail.com
+            </a>
           </div>
           <div className="flex justify-center">
             <img src={logo} alt="Logo" className="w-12 h-12" />
