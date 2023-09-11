@@ -1,5 +1,5 @@
 import React from "react";
-import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa"; // Importa los íconos de Tailwind CSS
+import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
 import logo from "../../images/logo.png";
 
 const Footer = () => {

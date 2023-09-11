@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { deleteDesign, fetchDesigns } from "../../features/localDesignSlice";
 import config from "../../api/config";
-import Modal from "react-modal"; // Importa Modal aquí
+import Modal from "react-modal";
 
 const ITEMS_PER_PAGE = 2;
 
@@ -11,8 +11,8 @@ function DesignsTable() {
   const designs = useSelector((state) => state.designs.designs);
   const statusDesign = useSelector((state) => state.designs.status);
   const [currentPage, setCurrentPage] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false); // Nuevo estado para el modal
-  const [designToDeleteId, setDesignToDeleteId] = useState(null); // Nuevo estado para almacenar el ID del diseño a eliminar
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [designToDeleteId, setDesignToDeleteId] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -22,14 +22,14 @@ function DesignsTable() {
   }, [statusDesign, dispatch]);
 
   const handleDeleteDesign = (id) => {
-    setDesignToDeleteId(id); // Almacena el ID del diseño a eliminar
-    setIsModalOpen(true); // Abre el modal de confirmación
+    setDesignToDeleteId(id);
+    setIsModalOpen(true);
   };
 
   const handleConfirmDelete = async () => {
     if (designToDeleteId) {
       await dispatch(deleteDesign(designToDeleteId));
-      setIsModalOpen(false); // Cierra el modal después de la eliminación
+      setIsModalOpen(false);
     }
   };
 
