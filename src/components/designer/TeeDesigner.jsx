@@ -9,7 +9,7 @@ function TeeDesigner() {
   return (
     <>
       <MenuNav />
-      <div className="pt-24 pb-8 bg-graypage">
+      <div className="pt-24 pb-8 bg-graypage mx-auto">
         <div className="flex justify-between gap-x-10 max-w-[90%] mx-auto md:flex-col lg:flex-row">
           <div>
             <h2 className="mb-6 text-darkiblue font-bold">

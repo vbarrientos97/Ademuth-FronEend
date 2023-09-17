@@ -209,7 +209,7 @@ function TeeDesignerForm() {
   return (
     <div className="p-x-6">
       <form onSubmit={handleSubmit} className="flex gap-x-12 mt-8">
-        <div className="flex flex-col gap-y-6">
+        <div className="flex flex-col gap-y-6 w-[45%]">
           <h2 className="mb-2 font-bold text-mainblue">
             Escoge aquí cómo quieres que se vea tu camiseta:
           </h2>
@@ -333,7 +333,7 @@ function TeeDesignerForm() {
 
         <div className="h-200 w-0.5 bg-grayline opacity-100 dark:opacity-50"></div>
 
-        <div className="flex flex-col gap-y-6 mt-[70px]">
+        <div className="flex flex-col gap-y-6 mt-[70px] w-[45%]">
           <div className="flex flex-col gap-y-4">
             <label
               htmlFor="tshirt-size"

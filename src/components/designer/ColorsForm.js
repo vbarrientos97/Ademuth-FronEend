@@ -11,6 +11,7 @@ function ColorsForm() {
     code: "",
   });
 
+  const [initialColor, setInitialColor] = useState(null);
   const params = useParams();
   const colorsData = useSelector((state) => state.colors.colors);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,6 +20,18 @@ function ColorsForm() {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (params.id) {
+      const designToEdit = colorsData.find(
+        (design) => design.id === Number(params.id)
+      );
+      if (designToEdit) {
+        setInitialColor(designToEdit);
+        setColor(designToEdit);
+      }
+    }
+  }, [params.id, colorsData]);
 
   const handleChange = (e) => {
     setColor({

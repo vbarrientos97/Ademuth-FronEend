@@ -52,7 +52,6 @@ function ProductsForm() {
 
     if (
       !product.name ||
-      !product.size ||
       !product.description ||
       !product.price ||
       !product.photoURL
@@ -126,14 +125,19 @@ function ProductsForm() {
 
                 <div className="flex flex-col mb-6">
                   <div className="relative">
-                    <input
-                      type="text"
-                      name="size"
-                      placeholder="Talla (opcional)"
-                      value={product.size}
+                    <select
+                      id="tshirt-size"
+                      className="w-full px-4 py-2 border border-gray-400 rounded-md"
                       onChange={handleChange}
-                      className={`text-sm sm:text-base placeholder-gray-500 pl-2 pr-4 rounded-lg border border-gray-400 w-full py-2`}
-                    />
+                      value={product.size}
+                    >
+                      <option value="">Selecciona tu talla...</option>
+                      <option value="XS">XS</option>
+                      <option value="S">S</option>
+                      <option value="M">M</option>
+                      <option value="L">L</option>
+                      <option value="XL">XL</option>
+                    </select>
                   </div>
                 </div>
 
