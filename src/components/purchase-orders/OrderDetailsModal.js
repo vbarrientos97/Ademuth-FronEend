@@ -7,6 +7,7 @@ const OrderDetailsModal = ({ isOpen, onClose, order }) => {
   const generateDownloadLink = (imageURL) => {
     const downloadLink = document.createElement("a");
     downloadLink.href = imageURL;
+    downloadLink.target = "_blank";
     downloadLink.download = "imagen_para_sublimar.pdf";
     downloadLink.click();
   };
@@ -20,7 +21,7 @@ const OrderDetailsModal = ({ isOpen, onClose, order }) => {
       overlayClassName="fixed inset-0"
     >
       <div className="bg-black opacity-90 absolute inset-0"></div>
-      <div className="bg-white p-6 rounded-md shadow-md relative">
+      <div className="bg-white p-6 rounded-md shadow-md relative w-[40%]">
         <h2 className="text-xl font-bold mb-4">Detalles de la Orden</h2>
         <div className="mb-4 flex gap-2">
           <h3 className="font-bold">Cliente:</h3>
@@ -37,22 +38,34 @@ const OrderDetailsModal = ({ isOpen, onClose, order }) => {
                 className="pb-4 pt-4 flex flex-col border-b border-solid"
               >
                 <div className="flex gap-2">
-                  {product.name || "Camiseta Sublimada"} - {product.size}, ₡
-                  {product.price}, Cantidad: {product.amount}, Comentarios:{" "}
-                  {product.comments}
+                  {product.name || "Camiseta Sublimada"} - ₡{product.price} -
+                  Cantidad:
+                  {product.amount}
+                  {!product.photoURL ? (
+                    <>
+                      <p> - Talla: {product.size} - </p>
+                      <p>Comentarios: {product.comments}</p>
+                    </>
+                  ) : (
+                    <p></p>
+                  )}
                 </div>
-                <button
-                  onClick={() =>
-                    generateDownloadLink(
-                      product.localDesign ||
-                        product.customDesign ||
-                        product.photoURL
-                    )
-                  }
-                  className="w-[180px] bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 rounded-full mt-2 cursor-pointer text-sm"
-                >
-                  Descargar PDF
-                </button>
+                {product.photoURL ? (
+                  <p></p>
+                ) : (
+                  <button
+                    onClick={() =>
+                      generateDownloadLink(
+                        product.localDesign ||
+                          product.customDesign ||
+                          product.photoURL
+                      )
+                    }
+                    className="w-[180px] bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 rounded-full mt-2 cursor-pointer text-sm"
+                  >
+                    Descargar PDF
+                  </button>
+                )}
               </li>
             ))}
           </ul>
